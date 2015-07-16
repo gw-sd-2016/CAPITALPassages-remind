@@ -1,0 +1,27 @@
+@main("Welcome to Play") {
+
+    <div class='container'>
+        <div class="signin-row row">
+            <div class="span8" style="padding-bottom: 20px;">
+                <div class="well well-small well-shadow">
+                    Institutions: @Institution.all().size()
+                    <br><br>
+					Super Admins: @User.getAllByRole("Super Administrator").size()
+					<br>
+                    Admins: @User.getAllByRole("Administrator").size()
+                    <br>
+                    Instructor: @User.getAllByRole("Instructor").size()
+                    <br>
+                    Students: @User.getAllByRole("Student").size()
+                    <br><br>
+                    Courses: @Course.all().size()
+                    <br><br>
+                    Questions: @Question.all().size()
+                    <br><br>
+                    Choices: @Choice.all().size()
+                    <br>
+                </div>
+            </div>
+    </div>
+
+}
