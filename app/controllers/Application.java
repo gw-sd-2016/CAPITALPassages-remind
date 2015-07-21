@@ -14,7 +14,7 @@ import views.html.*;
 
 public class Application extends Controller {
 
-    public Result index() {
+    public Result populate() {
     	Institution.createSomeInstitutions(4);
     	
     	User.createSomeUsers(1, User.Role.SUPERADMIN);
@@ -23,8 +23,12 @@ public class Application extends Controller {
     	User.createSomeUsers(5, User.Role.STUDENT);
     	
     	Course.createSomeCourses(10);
-    	
-        	    	
+    	    	
+        return redirect(routes.Application.index());
+    }
+    
+    
+    public Result index() {	    	
         return ok(index.render());
     }
 
