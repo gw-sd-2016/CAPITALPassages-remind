@@ -82,12 +82,7 @@ public class Prompt extends Model {
 	 GETTERS 
 	 ********************************/
 
-	//Get all Prompts in the system 
-	public static List<Prompt> all() {
-		return find.where()
-				.ne("retired", true)
-				.findList();
-	}
+	//-----------Single-------------//
 
 	//Get Prompt by ID
 	public static Prompt byId(Long id) {
@@ -103,6 +98,16 @@ public class Prompt extends Model {
 				.ne("retired", true)
 				.eq("text", text)
 				.findUnique();
+	}
+	
+	
+	//-----------Group-------------//
+	
+	//Get all Prompts in the system 
+	public static List<Prompt> getAll() {
+		return find.where()
+				.ne("retired", true)
+				.findList();
 	}
 
 

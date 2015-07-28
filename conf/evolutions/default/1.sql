@@ -6,7 +6,7 @@
 create table answer_decimal (
   id                        bigint auto_increment not null,
   retired                   tinyint(1) default 0,
-  dbl                       double,
+  answer                    double,
   created_time              datetime(6) not null,
   updated_time              datetime(6) not null,
   constraint pk_answer_decimal primary key (id))
@@ -60,6 +60,15 @@ create table choice (
   constraint pk_choice primary key (id))
 ;
 
+create table content (
+  id                        bigint auto_increment not null,
+  retired                   tinyint(1) default 0,
+  entity_id                 bigint,
+  created_time              datetime(6) not null,
+  updated_time              datetime(6) not null,
+  constraint pk_content primary key (id))
+;
+
 create table content_file (
   id                        bigint auto_increment not null,
   retired                   tinyint(1) default 0,
@@ -68,7 +77,6 @@ create table content_file (
   uploader_id               bigint,
   created_time              datetime(6) not null,
   updated_time              datetime(6) not null,
-  constraint uq_content_file_uploader_id unique (uploader_id),
   constraint pk_content_file primary key (id))
 ;
 
@@ -76,6 +84,7 @@ create table content_text (
   id                        bigint auto_increment not null,
   retired                   tinyint(1) default 0,
   text                      varchar(255),
+  uploader_id               bigint,
   created_time              datetime(6) not null,
   updated_time              datetime(6) not null,
   constraint pk_content_text primary key (id))
@@ -96,6 +105,18 @@ create table course (
   constraint pk_course primary key (id))
 ;
 
+create table flagged_question (
+  id                        bigint auto_increment not null,
+  retired                   tinyint(1) default 0,
+  module_id                 bigint,
+  question_id               bigint,
+  status                    integer,
+  created_time              datetime(6) not null,
+  updated_time              datetime(6) not null,
+  constraint ck_flagged_question_status check (status in (0,1,2)),
+  constraint pk_flagged_question primary key (id))
+;
+
 create table institution (
   id                        bigint auto_increment not null,
   retired                   tinyint(1) default 0,
@@ -105,6 +126,19 @@ create table institution (
   created_time              datetime(6) not null,
   updated_time              datetime(6) not null,
   constraint pk_institution primary key (id))
+;
+
+create table list_record (
+  id                        bigint auto_increment not null,
+  retired                   tinyint(1) default 0,
+  list_id                   bigint,
+  submitter_id              bigint,
+  attempt_number            integer,
+  time_to_complete          double,
+  is_cleared                tinyint(1) default 0,
+  created_time              datetime(6) not null,
+  updated_time              datetime(6) not null,
+  constraint pk_list_record primary key (id))
 ;
 
 create table message (
@@ -135,6 +169,18 @@ create table module (
   constraint pk_module primary key (id))
 ;
 
+create table module_list (
+  id                        bigint auto_increment not null,
+  retired                   tinyint(1) default 0,
+  start_date                datetime(6),
+  end_date                  datetime(6),
+  type                      integer,
+  created_time              datetime(6) not null,
+  updated_time              datetime(6) not null,
+  constraint ck_module_list_type check (type in (0,1)),
+  constraint pk_module_list primary key (id))
+;
+
 create table prompt (
   id                        bigint auto_increment not null,
   retired                   tinyint(1) default 0,
@@ -156,6 +202,64 @@ create table question (
   constraint ck_question_type check (type in (0,1,2)),
   constraint uq_question_message_id unique (message_id),
   constraint pk_question primary key (id))
+;
+
+create table question_list (
+  id                        bigint auto_increment not null,
+  retired                   tinyint(1) default 0,
+  start_date                datetime(6),
+  end_date                  datetime(6),
+  type                      integer,
+  created_time              datetime(6) not null,
+  updated_time              datetime(6) not null,
+  constraint ck_question_list_type check (type in (0,1)),
+  constraint pk_question_list primary key (id))
+;
+
+create table question_record (
+  id                        bigint auto_increment not null,
+  retired                   tinyint(1) default 0,
+  time_to_complete          double,
+  attempt_number            integer,
+  is_cleared                tinyint(1) default 0,
+  list_record_id            bigint,
+  submitter_id              bigint,
+  question_id               bigint,
+  created_time              datetime(6) not null,
+  updated_time              datetime(6) not null,
+  constraint uq_question_record_list_record_id unique (list_record_id),
+  constraint pk_question_record primary key (id))
+;
+
+create table response (
+  id                        bigint auto_increment not null,
+  retired                   tinyint(1) default 0,
+  entity_id                 bigint,
+  submitter_id              bigint,
+  created_time              datetime(6) not null,
+  updated_time              datetime(6) not null,
+  constraint pk_response primary key (id))
+;
+
+create table student_in_institution (
+  id                        bigint auto_increment not null,
+  student_id                bigint,
+  institution_id            bigint,
+  official                  tinyint(1) default 0,
+  created_time              datetime(6) not null,
+  constraint pk_student_in_institution primary key (id))
+;
+
+create table student_question (
+  id                        bigint auto_increment not null,
+  retired                   tinyint(1) default 0,
+  question_id               bigint,
+  course_id                 bigint,
+  status                    integer,
+  created_time              datetime(6) not null,
+  updated_time              datetime(6) not null,
+  constraint ck_student_question_status check (status in (0,1,2)),
+  constraint pk_student_question primary key (id))
 ;
 
 create table tag (
@@ -198,10 +302,10 @@ create table course_user (
   constraint pk_course_user primary key (course_id, user_id))
 ;
 
-create table institution_user (
-  institution_id                 bigint not null,
-  user_id                        bigint not null,
-  constraint pk_institution_user primary key (institution_id, user_id))
+create table message_content (
+  message_id                     bigint not null,
+  content_id                     bigint not null,
+  constraint pk_message_content primary key (message_id, content_id))
 ;
 
 create table message_user (
@@ -216,6 +320,18 @@ create table module_question (
   constraint pk_module_question primary key (module_id, question_id))
 ;
 
+create table module_list_module (
+  module_list_id                 bigint not null,
+  module_id                      bigint not null,
+  constraint pk_module_list_module primary key (module_list_id, module_id))
+;
+
+create table module_list_user (
+  module_list_id                 bigint not null,
+  user_id                        bigint not null,
+  constraint pk_module_list_user primary key (module_list_id, user_id))
+;
+
 create table question_basis (
   question_id                    bigint not null,
   basis_id                       bigint not null,
@@ -227,20 +343,32 @@ create table question_tag (
   tag_id                         bigint not null,
   constraint pk_question_tag primary key (question_id, tag_id))
 ;
+
+create table question_list_message (
+  question_list_id               bigint not null,
+  message_id                     bigint not null,
+  constraint pk_question_list_message primary key (question_list_id, message_id))
+;
+
+create table question_list_user (
+  question_list_id               bigint not null,
+  user_id                        bigint not null,
+  constraint pk_question_list_user primary key (question_list_id, user_id))
+;
 alter table choice add constraint fk_choice_question_1 foreign key (question_id) references question (id) on delete restrict on update restrict;
 create index ix_choice_question_1 on choice (question_id);
-alter table content_file add constraint fk_content_file_uploader_2 foreign key (uploader_id) references user (id) on delete restrict on update restrict;
-create index ix_content_file_uploader_2 on content_file (uploader_id);
-alter table course add constraint fk_course_instructor_3 foreign key (instructor_id) references user (id) on delete restrict on update restrict;
-create index ix_course_instructor_3 on course (instructor_id);
-alter table message add constraint fk_message_creator_4 foreign key (creator_id) references user (id) on delete restrict on update restrict;
-create index ix_message_creator_4 on message (creator_id);
-alter table message add constraint fk_message_prompt_5 foreign key (prompt_id) references prompt (id) on delete restrict on update restrict;
-create index ix_message_prompt_5 on message (prompt_id);
-alter table module add constraint fk_module_course_6 foreign key (course_id) references course (id) on delete restrict on update restrict;
-create index ix_module_course_6 on module (course_id);
-alter table question add constraint fk_question_message_7 foreign key (message_id) references message (id) on delete restrict on update restrict;
-create index ix_question_message_7 on question (message_id);
+alter table course add constraint fk_course_instructor_2 foreign key (instructor_id) references user (id) on delete restrict on update restrict;
+create index ix_course_instructor_2 on course (instructor_id);
+alter table message add constraint fk_message_creator_3 foreign key (creator_id) references user (id) on delete restrict on update restrict;
+create index ix_message_creator_3 on message (creator_id);
+alter table message add constraint fk_message_prompt_4 foreign key (prompt_id) references prompt (id) on delete restrict on update restrict;
+create index ix_message_prompt_4 on message (prompt_id);
+alter table module add constraint fk_module_course_5 foreign key (course_id) references course (id) on delete restrict on update restrict;
+create index ix_module_course_5 on module (course_id);
+alter table question add constraint fk_question_message_6 foreign key (message_id) references message (id) on delete restrict on update restrict;
+create index ix_question_message_6 on question (message_id);
+alter table question_record add constraint fk_question_record_listRecord_7 foreign key (list_record_id) references list_record (id) on delete restrict on update restrict;
+create index ix_question_record_listRecord_7 on question_record (list_record_id);
 alter table user add constraint fk_user_institution_8 foreign key (institution_id) references institution (id) on delete restrict on update restrict;
 create index ix_user_institution_8 on user (institution_id);
 
@@ -254,9 +382,9 @@ alter table course_user add constraint fk_course_user_course_01 foreign key (cou
 
 alter table course_user add constraint fk_course_user_user_02 foreign key (user_id) references user (id) on delete restrict on update restrict;
 
-alter table institution_user add constraint fk_institution_user_institution_01 foreign key (institution_id) references institution (id) on delete restrict on update restrict;
+alter table message_content add constraint fk_message_content_message_01 foreign key (message_id) references message (id) on delete restrict on update restrict;
 
-alter table institution_user add constraint fk_institution_user_user_02 foreign key (user_id) references user (id) on delete restrict on update restrict;
+alter table message_content add constraint fk_message_content_content_02 foreign key (content_id) references content (id) on delete restrict on update restrict;
 
 alter table message_user add constraint fk_message_user_message_01 foreign key (message_id) references message (id) on delete restrict on update restrict;
 
@@ -266,6 +394,14 @@ alter table module_question add constraint fk_module_question_module_01 foreign 
 
 alter table module_question add constraint fk_module_question_question_02 foreign key (question_id) references question (id) on delete restrict on update restrict;
 
+alter table module_list_module add constraint fk_module_list_module_module_list_01 foreign key (module_list_id) references module_list (id) on delete restrict on update restrict;
+
+alter table module_list_module add constraint fk_module_list_module_module_02 foreign key (module_id) references module (id) on delete restrict on update restrict;
+
+alter table module_list_user add constraint fk_module_list_user_module_list_01 foreign key (module_list_id) references module_list (id) on delete restrict on update restrict;
+
+alter table module_list_user add constraint fk_module_list_user_user_02 foreign key (user_id) references user (id) on delete restrict on update restrict;
+
 alter table question_basis add constraint fk_question_basis_question_01 foreign key (question_id) references question (id) on delete restrict on update restrict;
 
 alter table question_basis add constraint fk_question_basis_basis_02 foreign key (basis_id) references basis (id) on delete restrict on update restrict;
@@ -273,6 +409,14 @@ alter table question_basis add constraint fk_question_basis_basis_02 foreign key
 alter table question_tag add constraint fk_question_tag_question_01 foreign key (question_id) references question (id) on delete restrict on update restrict;
 
 alter table question_tag add constraint fk_question_tag_tag_02 foreign key (tag_id) references tag (id) on delete restrict on update restrict;
+
+alter table question_list_message add constraint fk_question_list_message_question_list_01 foreign key (question_list_id) references question_list (id) on delete restrict on update restrict;
+
+alter table question_list_message add constraint fk_question_list_message_message_02 foreign key (message_id) references message (id) on delete restrict on update restrict;
+
+alter table question_list_user add constraint fk_question_list_user_question_list_01 foreign key (question_list_id) references question_list (id) on delete restrict on update restrict;
+
+alter table question_list_user add constraint fk_question_list_user_user_02 foreign key (user_id) references user (id) on delete restrict on update restrict;
 
 # --- !Downs
 
@@ -290,6 +434,8 @@ drop table basis;
 
 drop table choice;
 
+drop table content;
+
 drop table content_file;
 
 drop table content_text;
@@ -300,17 +446,27 @@ drop table course_message;
 
 drop table course_user;
 
+drop table flagged_question;
+
 drop table institution;
 
-drop table institution_user;
+drop table list_record;
 
 drop table message;
+
+drop table message_content;
 
 drop table message_user;
 
 drop table module;
 
 drop table module_question;
+
+drop table module_list;
+
+drop table module_list_module;
+
+drop table module_list_user;
 
 drop table prompt;
 
@@ -319,6 +475,20 @@ drop table question;
 drop table question_basis;
 
 drop table question_tag;
+
+drop table question_list;
+
+drop table question_list_message;
+
+drop table question_list_user;
+
+drop table question_record;
+
+drop table response;
+
+drop table student_in_institution;
+
+drop table student_question;
 
 drop table tag;
 

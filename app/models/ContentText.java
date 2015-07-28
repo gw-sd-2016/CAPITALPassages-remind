@@ -39,14 +39,16 @@ public class ContentText extends Model {
 	@Required
 	public String text;
 
-
+	@Required
+	public Long uploaderId;
 	
 	/********************************
 	 CONSTRUCTORS
 	 ********************************/
 	
-	public ContentText(String text) {
+	public ContentText(String text, Long uploaderId) {
 		this.text = text;
+		this.uploaderId = uploaderId;
 	}
 	
 	

@@ -43,8 +43,8 @@ public class ContentFile extends Model {
 	@Required
 	public String fileType;
 	
-	@OneToOne
-	public User uploader;
+	@Required
+	public Long uploaderId;
 
 
 	
@@ -52,10 +52,10 @@ public class ContentFile extends Model {
 	 CONSTRUCTORS
 	 ********************************/
 	
-	public ContentFile(String name, String fileType, User uploader) {
+	public ContentFile(String name, String fileType, Long uploaderId) {
 		this.name = name;
 		this.fileType = fileType;
-		this.uploader = uploader;
+		this.uploaderId = uploaderId;
 	}
 	
 	

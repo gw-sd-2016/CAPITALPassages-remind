@@ -81,12 +81,7 @@ public class Basis extends Model {
 	 GETTERS 
 	 ********************************/
 
-	//Get all Bases in the system 
-	public static List<Basis> all() {
-		return find.where()
-				.ne("retired", true)
-				.findList();
-	}
+	//-----------Single-------------//
 
 	//Get Basis by ID
 	public static Basis byId(Long id) {
@@ -96,7 +91,15 @@ public class Basis extends Model {
 				.findUnique();
 	}
 
+	
+	//-----------Group-------------//
 
+	//Get all Bases in the system 
+	public static List<Basis> getAll() {
+		return find.where()
+				.eq("retired", false)
+				.findList();
+	}
 
 
 

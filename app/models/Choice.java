@@ -94,9 +94,13 @@ public class Choice extends Model {
 	/********************************
 	 GETTERS / SETTERS
 	 ********************************/
-	public static List<Choice> all() {
+	
+	//-----------Single-------------//
+
+	//get all Choices in the system
+	public static List<Choice> getAll() {
 		return find.where()
-				.eq("retired", 0)
+				.eq("retired", false)
 			.findList();
 	}
 	
@@ -143,7 +147,7 @@ public class Choice extends Model {
 					boolean correct = r.nextBoolean();
 
 					String phrase = ng.getName().toLowerCase();
-					for (int j=0; j < r.nextInt(5); j++) {
+					for (int j=0; j < r.nextInt((100 - 1) + 1) + 1; j++) {
 						phrase += ng.getName().toLowerCase() + " ";
 					}
 					phrase = phrase.substring(0, phrase.length()-1);

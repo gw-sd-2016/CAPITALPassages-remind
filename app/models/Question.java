@@ -148,13 +148,8 @@ public class Question extends Model {
 	 GETTERS 
 	 ********************************/
 	
-	//Get all Institution in the system 
-	public static List<Question> all() {
-		return find.where()
-					.ne("retired", true)
-				.findList();
-	}
-	
+	//-----------Single-------------//
+
 	//Get Institution by ID
 	public static Question byId(Long id) {
 		return find.where()
@@ -170,8 +165,16 @@ public class Question extends Model {
 					.eq("name", name)
 				.findUnique();
 	}
-	
-	
+
+
+	//-----------Group-------------//
+
+	//Get all Institution in the system 
+	public static List<Question> getAll() {
+		return find.where()
+				.ne("retired", true)
+				.findList();
+	}
 	
 	
 	

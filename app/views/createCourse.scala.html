@@ -1,0 +1,65 @@
+@(form: Form[forms.CourseForm])
+@main("Index") {
+
+	<html class="no-js" lang="en">
+		<head>
+			<meta charset="utf-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+			<title>Create Course</title>
+
+			<script>
+	            $(document).ready(function() {
+	                // page is now ready, initialize the calendar...
+	                $('#calendar').fullCalendar({
+		                dayClick: function() {
+		                    alert('a day has been clicked!');
+		                }
+	                })
+	            });
+	        </script>
+		
+		<body>
+			<div class="row">
+				<div class="large-12 medium-12 small-12">
+					<h1>Create a New Course</h1>
+					<h4>George Washington University</h4>
+					<br>
+				</div>
+			</div>
+			<div class="row">
+				<div class="large-4 medium-4 small-4 columns">
+					<h5>Course Template</h5>
+					<button href="#" data-dropdown="drop1" aria-controls="drop1" aria-expanded="false" class="button dropdown semiround">{Blank}</button><br>
+					<ul id="drop1" data-dropdown-content class="f-dropdown semiround" aria-hidden="true">
+					@for(course <- Course.getAllCoursesForInstructor(5)) {
+						<li><a href="#">@course.name</a></li>
+					}
+					</ul>
+				</div>
+				<form action="@routes.CourseController.createCourse" method="post" enctype="multipart/form-data">
+				<div class="large-4 medium-4 small-4 small-centered columns">
+					<h5>Course Name</h5>
+					<input type="text" name="name" value="@form("name").value">
+					<h5>Description</h5>
+					<textarea name="description" value="@form("description").value"></textarea>
+					<div id="calendar"></div>
+					<h5>Course Instructor</h5>
+					<button href="#" data-dropdown="drop2" aria-controls="drop2" aria-expanded="false" class="button dropdown semiround full-width">Select a Instructor</button><br>
+					<ul id="drop2" data-dropdown-content class="f-dropdown semiround" aria-hidden="true">
+						@for(instructor <- User.getAllInstructorsForInstitution(session.get("institutionId").toLong)) {
+							<li><a href="#">@instructor.firstName @instructor.lastName</a></li>
+						}
+					</ul>
+					<div class="text-center">
+						<button type="submit" class="button success semiround">Submit</button>
+					</div>
+				</div>
+				</form>
+			</div>
+	</body>
+		
+		<script>
+            $(document).foundation();
+        </script>
+
+}

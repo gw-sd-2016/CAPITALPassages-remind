@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
+import com.avaje.ebean.Expr;
 import com.avaje.ebean.Model;
 import com.avaje.ebean.annotation.CreatedTimestamp;
 import com.avaje.ebean.annotation.UpdatedTimestamp;
@@ -19,7 +20,7 @@ import play.data.validation.Constraints.*;
 public class Module extends Model {
 	
 	/********************************
-	 ENUMERATOR: For each User type
+	 ENUMERATOR: For each Module type
 	 ********************************/
 	public static enum Type {
 		PRACTICE,
@@ -134,20 +135,39 @@ public class Module extends Model {
 	/********************************
 	 GETTERS 
 	 ********************************/
+
+	//-----------Single-------------//
+
+	//Get Module by ID
+	public static Module byId(Long id) {
+		return find.where()
+				.ne("retired", true)
+				.eq("id", id)
+				.findUnique();
+	}
 	
+	
+	//-----------Group-------------//
+
 	//Get all Modules in the system 
-	public static List<Module> all() {
+	public static List<Module> getAll() {
 		return find.where()
 					.ne("retired", true)
 				.findList();
 	}
 	
-	//Get Module by ID
-	public static Module byId(Long id) {
+	//Get getAll Modules for an instructor
+	public static List<Module> getAllModulesForInstructor(Long instructorId) {
+		List<Long> li = new ArrayList<Long>();
+
+		for(Course course: Course.find.select("id").where().eq("retired", false).eq("instructor_id", instructorId).findList()) {
+		    li.add(course.id);
+		}
 		return find.where()
-					.ne("retired", true)
-					.eq("id", id)
-				.findUnique();
+					.eq("retired", false)
+					.in("course_id", li)
+					.not(Expr.in("course_id", li))
+				.findList();
 	}
 	
 	

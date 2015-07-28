@@ -81,8 +81,8 @@ public class Message extends Model {
 	@Required
 	public Type type;
 
-	//	@ManyToMany (cascade = CascadeType.ALL)
-	//	public Set<Content> content = new HashSet<Content>();
+	@ManyToMany (cascade = CascadeType.ALL)
+	public Set<Content> content = new HashSet<Content>();
 
 	@ManyToMany (cascade = CascadeType.ALL)
 	public Set<User> usersReceiving = new HashSet<User>();
@@ -133,12 +133,7 @@ public class Message extends Model {
 	 GETTERS 
 	 ********************************/
 
-	//Get all Messages in the system 
-	public static List<Message> all() {
-		return find.where()
-				.ne("retired", true)
-				.findList();
-	}
+	//-----------Single-------------//
 
 	//Get Message by ID
 	public static Message byId(Long id) {
@@ -146,6 +141,16 @@ public class Message extends Model {
 				.ne("retired", true)
 				.eq("id", id)
 				.findUnique();
+	}
+
+	
+	//-----------Group-------------//
+
+	//Get all Messages in the system 
+	public static List<Message> getAll() {
+		return find.where()
+				.ne("retired", true)
+				.findList();
 	}
 
 
@@ -170,6 +175,21 @@ public class Message extends Model {
 
 		Prompt prompt = new Prompt(text);
 		Prompt.create(prompt);
-		return new Message(instructor, type, prompt);
+		
+		for (int i=0; i < r.nextInt(5); i++) {
+			Content.createSomeContent(instructor.id, r.nextInt(2));
+		}
+		
+		Message message = new Message(instructor, type, prompt);
+		for (int i=0; i < r.nextInt(3); i++) {
+			int random = r.nextInt(Content.getAll().size());
+			if (random == 0) { random = 1; }
+			System.out.println(random);
+			System.out.println(Long.valueOf(random));
+			message.content.add(Content.byId(Long.valueOf(random)));
+		}
+//		message.save();
+		
+		return message;
 	}
 }

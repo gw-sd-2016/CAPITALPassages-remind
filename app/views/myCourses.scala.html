@@ -1,0 +1,49 @@
+@(instructor: User)
+@main("My Courses", true) {
+
+	<div class="row">
+		<div class="large-12 medium-12 small-12 columns">
+			<h1>Manage Courses</h1>
+			<h4>@session.get("institutionName")</h4>
+		</div>
+	</div>
+	<div class="row">
+		<div class="large-12 medium-12 small-12 columns">
+			<a href="@routes.CourseController.showCreateCoursePage()" class="button large semiround">Create New Course</a>
+		</div>
+	</div>
+	<div class="row">
+		<div class="large-12 medium-12 small-12 columns">
+			<div class="panel">
+				<table width="100%">
+					<thead>
+						<tr>
+							<th>Course Name</th>
+							<th width="100">Students</th>
+							<th width="150">Date</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						@for(course <- Course.getAllCoursesForInstructor(instructor.id)) {
+							<tr>
+								<td><a href="#">@course.name</a></td>
+								<td>@User.getAllStudentsForCourse(course.id).size()</td>
+								<td>@course.startDate</td>
+								<td><a href="#" class="button small semiround">Edit</a>
+									<a href="#" class="button small semiround alert">Delete</a>
+								</td>
+							</tr>
+						}
+						
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<script src="js/vendor/jquery.js"></script>
+	<script src="js/foundation.min.js"></script>
+	<script>
+		$(document).foundation();
+	</script>
+}

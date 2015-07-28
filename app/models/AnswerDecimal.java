@@ -1,14 +1,14 @@
 package models;
 
-import java.sql.Timestamp;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
-
 import com.avaje.ebean.Model;
 import com.avaje.ebean.annotation.CreatedTimestamp;
 import com.avaje.ebean.annotation.UpdatedTimestamp;
 import play.data.validation.Constraints.Required;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 public class AnswerDecimal extends Model {
@@ -34,7 +34,7 @@ public class AnswerDecimal extends Model {
 	/* Specific */
 	/*===========*/
 	@Required
-	public double dbl;
+	public double answer;
 
 
 	
@@ -43,7 +43,7 @@ public class AnswerDecimal extends Model {
 	 ********************************/
 	
 	public AnswerDecimal(double dbl) {
-		this.dbl = dbl;
+		this.answer = dbl;
 	}
 	
 	
@@ -61,8 +61,13 @@ public class AnswerDecimal extends Model {
 	 CREATE / DELETE 
 	 ********************************/
 	public static AnswerDecimal create(AnswerDecimal answer_decimal) {
-		answer_decimal.save();
-		return answer_decimal;
+		AnswerDecimal ad = AnswerDecimal.byAnswer(answer_decimal.answer);
+		if (ad != null) {
+			return ad;
+		} else {
+			answer_decimal.save();
+			return answer_decimal;
+		}
 	}
 
 	public static void delete(Long id) {
@@ -74,9 +79,39 @@ public class AnswerDecimal extends Model {
 		answer_decimal.retired = true;
 		answer_decimal.save();
 	}
-	
-	
-	
-	
+
+
+
+	/********************************
+	 GETTERS 
+	 ********************************/
+
+	//-----------Single-------------//
+
+	//Get AnswerDecimal by ID
+	public static AnswerDecimal byId(Long id) {
+		return find.where()
+					.eq("retired", false)
+					.eq("id", id)
+				.findUnique();
+	}
+
+	//Get AnswerDecimal by text
+	public static AnswerDecimal byAnswer(double answer) {
+		return find.where()
+					.eq("retired", false)
+					.eq("answer", answer)
+				.findUnique();
+	}
+
+
+	//-----------Group-------------//
+
+	//Get all AnswerDecimals in the system 
+	public static List<AnswerDecimal> getAll() {
+		return find.where()
+					.eq("retired", false)
+				.findList();
+	}
 
 }

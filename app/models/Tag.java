@@ -82,12 +82,7 @@ public class Tag extends Model {
 	 GETTERS 
 	 ********************************/
 
-	//Get all Tags in the system 
-	public static List<Tag> all() {
-		return find.where()
-				.ne("retired", true)
-				.findList();
-	}
+	//-----------Single-------------//
 
 	//Get Tag by ID
 	public static Tag byId(Long id) {
@@ -103,6 +98,16 @@ public class Tag extends Model {
 				.ne("retired", true)
 				.eq("name", name)
 				.findUnique();
+	}
+
+	
+	//-----------Group-------------//
+
+	//Get all Tags in the system 
+	public static List<Tag> getAll() {
+		return find.where()
+				.ne("retired", true)
+				.findList();
 	}
 
 

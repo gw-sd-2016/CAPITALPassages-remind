@@ -8,7 +8,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
+import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Model;
+import com.avaje.ebean.SqlRow;
 import com.avaje.ebean.annotation.CreatedTimestamp;
 import com.avaje.ebean.annotation.UpdatedTimestamp;
 
@@ -41,13 +43,11 @@ public class Institution extends Model {
 	@Required
 	public String name;
 	
+	@Required
 	public String location;
 	
 	public String description;
-	
-	@ManyToMany (cascade = CascadeType.ALL)
-	public Set<User> students = new HashSet<User>();
-	
+
 	
 	
 	/********************************
@@ -94,12 +94,7 @@ public class Institution extends Model {
 	 GETTERS 
 	 ********************************/
 	
-	//Get all Institution in the system 
-	public static List<Institution> all() {
-		return find.where()
-					.ne("retired", true)
-				.findList();
-	}
+	//-----------Single-------------//
 	
 	//Get Institution by ID
 	public static Institution byId(Long id) {
@@ -116,8 +111,31 @@ public class Institution extends Model {
 					.eq("name", name)
 				.findUnique();
 	}
+
 	
-	
+	//-----------Group-------------//
+
+	//Get all Institutions in the system 
+	public static List<Institution> getAll() {
+		return find.where()
+				.ne("retired", true)
+				.findList();
+	}
+	public static List<Institution> getAllInstitutionsForStudent(Long studentId) {
+		String sql = "select * from institution " +
+					 "where id in " +
+						"(select institution_id from student_in_institution " +
+						"where student_id="+studentId+")";
+		
+		List<Institution> allInstitutions = new ArrayList<Institution>();
+		
+		List<SqlRow> rows = Ebean.createSqlQuery(sql).findList();
+		for (SqlRow row : rows) {
+			allInstitutions.add(Institution.byId(row.getLong("id")));
+		}
+		
+		return allInstitutions;
+	}
 	
 	
 	
