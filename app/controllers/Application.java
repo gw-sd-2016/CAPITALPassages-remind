@@ -30,24 +30,16 @@ public class Application extends Controller {
     }
     
     
-    public Result showIndexPage() {	    	
+    public Result showIndexPage() {
+		
         return ok(index.render());
     }
 
 
 	/**********************
 	 * Load the page to login
-	 * @permission A, I, S
 	 **********************/
 	public Result showLoginPage() {
-		//permissions			  A      I      S
-		Boolean[] permissions = {true,  true,  true};
-
-		//only allow users with permission to view this page
-		if (!User.hasPermission(session("userId"), Arrays.asList(permissions))) {
-			return redirect(routes.Application.showIndexPage());
-		}
-
 		return ok(login.render(form(LoginForm.class), ""));
 	}
 

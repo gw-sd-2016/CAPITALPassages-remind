@@ -155,17 +155,13 @@ public class User extends Model {
 		user.retired = true;
 		user.save();
 	}
-	
-	
-//	public static boolean isValid(String userId) {
-//		User user = User.byId(Long.parseLong(userId));
-//		if (user == null) {
-//			return false;
-//		}
-//		return true;
-//	}
 
 
+	/********************************
+	 VALIDATION
+	 ********************************/
+
+	//check if a user is in the database (i.e. the entity is not null)
 	public static boolean exists(User user) {
 		if (user != null) {
 			return true;
@@ -173,6 +169,7 @@ public class User extends Model {
 		return false;
 	}
 	
+	//check if a user has the proper permissions to view a page
 	public static boolean hasPermission(String userId, List<Boolean> pflags) {
 		User user = User.byId(Long.parseLong(userId));
 		
@@ -264,21 +261,21 @@ public class User extends Model {
 	
 	// Get all Users in the system by role
 	public static List<User> getAllByRole(String role) {
-		if (role.equals("Student")) {
+//		if (role.equals("Student")) {
 			return find.where()
 						.ne("retired", true)
 						.eq("type", Role.getRole(role))
 						.orderBy().asc("lastName")
 					.findList();
-		} else {
-			//Because permissions cascade upwards, getting all Instructors 
-			// should also get all Admins and SAs, etc.
-			return find.where()
-						.ne("retired", true)
-						.le("type", Role.getRole(role))
-						.orderBy().asc("lastName")
-					.findList();
-		}
+//		} else {
+//			//Because permissions cascade upwards, getting all Instructors 
+//			// should also get all Admins and SAs, etc.
+//			return find.where()
+//						.ne("retired", true)
+//						.le("type", Role.getRole(role))
+//						.orderBy().asc("lastName")
+//					.findList();
+//		}
 	}
 	
 	
@@ -427,7 +424,7 @@ public class User extends Model {
 				continue;
 			}
 			try {
-				user = User.create(new User(name.toLowerCase()+"@email.com", name.toLowerCase(), name.toLowerCase(), name, ng.getName(), role, Long.valueOf(0)));
+				user = User.create(new User(name.toLowerCase() + "@email.com", name.toLowerCase(), name.toLowerCase(), name, ng.getName(), role, Long.valueOf(0)));
 				int instId = r.nextInt((Institution.getAll().size() - 1) + 1) + 1;
 				if (role != Role.STUDENT) {
 					user.institution = Institution.byId(Long.valueOf(instId));

@@ -3,22 +3,30 @@
 # ~~~~
 
 # Home page
-GET         /                            @controllers.Application.showIndexPage
-GET         /populate                    @controllers.Application.populate
-GET         /student/:username           @controllers.UserController.showStudentProfilePage(username: String)
-GET         /instructor/:username        @controllers.UserController.showInstructorProfilePage(username: String)
-GET         /allInstructors              @controllers.UserController.showAllInstructorsPage
-GET         /allStudents                 @controllers.UserController.showAllStudentsPage
-GET         /createCourse                controllers.CourseController.showCreateCoursePage()
-POST        /createCourse                controllers.CourseController.createCourse()
-GET         /allCourses                  @controllers.CourseController.showAllCoursesPage
-GET         /myCourses                   @controllers.CourseController.showMyCoursesPage
-GET         /login                       @controllers.Application.showLoginPage()
-POST        /login                       controllers.Application.login
+GET         /                                @controllers.Application.showIndexPage
+GET         /populate                        @controllers.Application.populate
+GET         /student/:username               @controllers.UserController.showStudentProfilePage(username: String)
+GET         /instructor/:username            @controllers.UserController.showInstructorProfilePage(username: String)
+GET         /allInstructors                  @controllers.UserController.showAllInstructorsPage
+GET         /allStudents                     @controllers.UserController.showAllStudentsPage
+GET         /new/course                      controllers.CourseController.showCreateCoursePage()
+POST        /new/course                      controllers.CourseController.createCourse()
+GET         /allCourses                      @controllers.CourseController.showAllCoursesPage
+GET         /myCourses                       @controllers.CourseController.showMyCoursesPage
+GET         /course/:courseId                controllers.CourseController.showCoursePage(courseId: Long)
+GET         /login                           @controllers.Application.showLoginPage()
+POST        /login                           controllers.Application.login
 
 
-GET         /createInstructor            controllers.UserController.showCreateInstructorPage()
-POST        /createInstructor            controllers.UserController.createInstructor()
+GET         /newInstructor                   controllers.UserController.showCreateInstructorPage()
+POST        /newInstructor                   controllers.UserController.createInstructor()
+GET         /editInstructor/:username        controllers.UserController.showEditInstructorPage(username: String)
+POST        /editInstructor/:username        controllers.UserController.editInstructor(username: String)
+GET         /editStudent/:username           controllers.UserController.showEditStudentPage(username: String)
+POST        /editStudent/:username           controllers.UserController.editStudent(username: String)
+
+GET         /createQuestion                  controllers.QuestionController.showCreateQuestionPage()
+
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file                    controllers.Assets.versioned(path="/public", file: Asset)

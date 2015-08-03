@@ -1,6 +1,9 @@
 package models;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.persistence.CascadeType;
@@ -16,6 +19,7 @@ import com.avaje.ebean.SqlRow;
 import com.avaje.ebean.annotation.CreatedTimestamp;
 import com.avaje.ebean.annotation.UpdatedTimestamp;
 import forms.CourseForm;
+import org.joda.time.format.DateTimeFormatter;
 import play.data.validation.Constraints.*;
 
 
@@ -74,7 +78,7 @@ public class Course extends Model {
 	/********************************
 	 CONSTRUCTORS
 	 ********************************/
-	public Course(String name, String description, Timestamp startDate, Timestamp endDate, boolean hasOpenEnrollment) {
+	public Course(String name, String description, Date startDate, Date endDate, boolean hasOpenEnrollment) {
 		this.name = name;
 		this.description = description;
 		this.startDate = startDate;
@@ -83,12 +87,16 @@ public class Course extends Model {
 	}
 
 
-	public Course(Long instructorId, CourseForm courseForm) {
-		this.instructor = User.byId(instructorId);
+	public Course(CourseForm courseForm) throws ParseException {
+		SimpleDateFormat from = new SimpleDateFormat("MM/dd/yyyy");
+		Date startDate = from.parse(courseForm.start);
+		Date endDate = from.parse(courseForm.end);
+		
+		this.instructor = User.byId(courseForm.instructorId);
 		this.name = courseForm.name;
 		this.description = courseForm.description;
-//		this.startDate = courseForm.startDate;
-//		this.endDate = courseForm.endDate;
+		this.startDate = startDate;
+		this.endDate = endDate;
 //		this.hasOpenEnrollment = courseForm.hasOpenEnrollment;
 	}
 	
@@ -218,6 +226,7 @@ public class Course extends Model {
 			
 			//get a random instructor in the system and set them as the course's instructor
 			List<User> allInstructors = User.getAllByRole("Instructor");
+			allInstructors.addAll(User.getAllByRole("Administrator"));
 			int randomInst = r.nextInt((allInstructors.size() - 1) + 1) + 1;
 			course.instructor = allInstructors.get(randomInst-1);
 			

@@ -157,6 +157,7 @@ create table module (
   id                        bigint auto_increment not null,
   course_id                 bigint not null,
   retired                   tinyint(1) default 0,
+  name                      varchar(255),
   description               varchar(255),
   order_index               integer,
   release_date              datetime(6),

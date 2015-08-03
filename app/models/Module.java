@@ -66,6 +66,9 @@ public class Module extends Model {
 	
 	/* Specific */
 	/*===========*/
+	@Required
+	public String name;
+	
 	public String description;
 	
 	@Required
@@ -91,7 +94,8 @@ public class Module extends Model {
 	/********************************
 	 CONSTRUCTORS
 	 ********************************/
-	public Module(String description, Timestamp releaseDate, boolean hasSpacedRepetition, boolean isHidden, Type type) {
+	public Module(String name, String description, Timestamp releaseDate, boolean hasSpacedRepetition, boolean isHidden, Type type) {
+		this.name = name;
 		this.description = description;
 		this.releaseDate = releaseDate;
 		this.hasSpacedRepetition = hasSpacedRepetition;
@@ -155,21 +159,58 @@ public class Module extends Model {
 					.ne("retired", true)
 				.findList();
 	}
-	
-	//Get getAll Modules for an instructor
-	public static List<Module> getAllModulesForInstructor(Long instructorId) {
-		List<Long> li = new ArrayList<Long>();
 
-		for(Course course: Course.find.select("id").where().eq("retired", false).eq("instructor_id", instructorId).findList()) {
-		    li.add(course.id);
-		}
+
+	//Get all Modules for an instructor
+	public static List<Module> getAllModulesForCourse(Long courseId) {
 		return find.where()
-					.eq("retired", false)
-					.in("course_id", li)
-					.not(Expr.in("course_id", li))
+				.eq("retired", false)
+				.eq("course_id", courseId)
+				.findList();
+	}
+
+
+	//Get all Modules for an instructor
+	public static List<Module> getAllModulesForCourseByType(Long courseId, Type type) {
+		return find.where()
+				.eq("retired", false)
+				.eq("course_id", courseId)
+				.eq("type", type)
 				.findList();
 	}
 	
+	
+	//Get all Modules for an instructor
+	public static List<Module> getAllModulesForInstructor(Long instructorId) {
+		List<Long> li = new ArrayList<Long>();
+
+		//get all courses for the given instructor
+		for(Course course: Course.find.select("id").where().eq("retired", false).eq("instructor_id", instructorId).findList()) {
+		    li.add(course.id);
+		}
+		
+		return find.where()
+					.eq("retired", false)
+					.in("course_id", li)
+				.findList();
+	}
+
+
+	//Get all Modules of a specific type for an instructor
+	public static List<Module> getAllModulesForInstructorByType(Long instructorId, Type type) {
+		List<Long> li = new ArrayList<Long>();
+
+		//get all courses for the given instructor
+		for(Course course: Course.find.select("id").where().eq("retired", false).eq("instructor_id", instructorId).findList()) {
+			li.add(course.id);
+		}
+
+		return find.where()
+				.eq("retired", false)
+				.in("course_id", li)
+				.eq("type", type)
+				.findList();
+	}
 	
 	
 	
@@ -190,9 +231,10 @@ public class Module extends Model {
 			long diff = end - offset + 1;
 			Timestamp rand = new Timestamp(offset + (long)(Math.random() * diff));
 			
-			Module module = new Module("description of module", rand, r.nextBoolean(), r.nextBoolean(), VALUES.get(r.nextInt(VALUES.size())));
+			Module module = new Module(ng.getName(), "description of module", rand, r.nextBoolean(), r.nextBoolean(), VALUES.get(r.nextInt(VALUES.size())));
 			
 			module.questions.addAll(Question.createSomeQuestions(r.nextInt(20), course.instructor));
+			module.orderIndex = course.modules.size();
 			
 			course.modules.add(module);
 			course.save();

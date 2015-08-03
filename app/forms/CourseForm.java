@@ -1,24 +1,22 @@
 package forms;
 
-import java.sql.Timestamp;
-
 public class CourseForm {
 
 	public Long instructorId;
 	public String name;
 	public String description;
-//	public Timestamp startDate;
-//	public Timestamp endDate;
+	public String start;
+	public String end;
 //	public boolean hasOpenEnrollment;
 
 
 	public CourseForm() {}
-	public CourseForm(Long instructorId, String name, String description/*, Timestamp startDate, Timestamp endDate, boolean hasOpenEnrollment*/) {
+	public CourseForm(Long instructorId, String name, String description, String start, String end) {
 		this.instructorId = instructorId;
 		this.name = name;
 		this.description = description;
-//		this.startDate = startDate;
-//		this.endDate = endDate;
+		this.start = start;
+		this.end = end;
 //		this.hasOpenEnrollment = hasOpenEnrollment;
 	}
 

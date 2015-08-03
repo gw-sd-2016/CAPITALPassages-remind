@@ -9,57 +9,116 @@
 
 			<script>
 	            $(document).ready(function() {
-	                // page is now ready, initialize the calendar...
-	                $('#calendar').fullCalendar({
-		                dayClick: function() {
-		                    alert('a day has been clicked!');
-		                }
-	                })
+//	                $('.fdatepicker').fdatepicker();
 	            });
 	        </script>
-		
-		<body>
-			<div class="row">
-				<div class="large-12 medium-12 small-12">
-					<h1>Create a New Course</h1>
-					<h4>George Washington University</h4>
-					<br>
-				</div>
+
+	<body>
+		<div class="row">
+			<div class="large-12 medium-12 small-12">
+				<h1>Create a New Course</h1>
+				<h4>@session.get("institutionName")</h4>
+				<br>
 			</div>
-			<div class="row">
-				<div class="large-4 medium-4 small-4 columns">
-					<h5>Course Template</h5>
-					<button href="#" data-dropdown="drop1" aria-controls="drop1" aria-expanded="false" class="button dropdown semiround">{Blank}</button><br>
-					<ul id="drop1" data-dropdown-content class="f-dropdown semiround" aria-hidden="true">
-					@for(course <- Course.getAllCoursesForInstructor(5)) {
-						<li><a href="#">@course.name</a></li>
-					}
-					</ul>
-				</div>
-				<form action="@routes.CourseController.createCourse" method="post" enctype="multipart/form-data">
+		</div>
+		@if(form.hasGlobalErrors) {
+			<div class="alert alert-danger">
+			@form.globalError.message
+
+			</div>
+		}
+		<div class="row">
+			<div class="large-4 medium-4 small-4 columns">
+				<h5>Course Template</h5>
+				<button href="#" id="templateDropdown" data-dropdown="drop1" aria-controls="drop1" aria-expanded="false" class="button dropdown semiround">{Blank}</button><br>
+				<ul id="drop1" data-dropdown-content class="f-dropdown semiround" aria-hidden="true">
+				@for(course <- Course.getAllCoursesForInstructor(session.get("userId").toLong)) {
+					<li><a href="#">@course.name</a></li>
+				}
+				</ul>
+			</div>
+			<form action="@routes.CourseController.createCourse" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="start" id="start">
+				<input type="hidden" name="end" id="end">
+				<input type="hidden" name="instructorId" id="instructorId" value="@session.get("userId")">
+
 				<div class="large-4 medium-4 small-4 small-centered columns">
+					@if(User.byId(session.get("userId").toLong).`type` == User.Role.ADMIN) {
+						<h5>Course Instructor</h5>
+						<button href="#" id="instructorDropdown" data-dropdown="drop2" aria-controls="drop2" aria-expanded="false" class="button dropdown semiround full-width">Select a Instructor</button><br>
+						<ul id="drop2" data-dropdown-content class="f-dropdown semiround" aria-hidden="true">
+						@for(instructor <- User.getAllInstructorsForInstitution(session.get("institutionId").toLong)) {
+							<li id="@instructor.id"><a>@instructor.firstName @instructor.lastName</a></li>
+						}
+						</ul>
+					}
 					<h5>Course Name</h5>
 					<input type="text" name="name" value="@form("name").value">
 					<h5>Description</h5>
 					<textarea name="description" value="@form("description").value"></textarea>
-					<div id="calendar"></div>
-					<h5>Course Instructor</h5>
-					<button href="#" data-dropdown="drop2" aria-controls="drop2" aria-expanded="false" class="button dropdown semiround full-width">Select a Instructor</button><br>
-					<ul id="drop2" data-dropdown-content class="f-dropdown semiround" aria-hidden="true">
-						@for(instructor <- User.getAllInstructorsForInstitution(session.get("institutionId").toLong)) {
-							<li><a href="#">@instructor.firstName @instructor.lastName</a></li>
-						}
-					</ul>
+
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Start date:
+									<input type="text" class="span2" value="" id="dpd1">
+								</th>
+								<th>End date:
+									<input type="text" class="span2" value="" id="dpd2">
+								</th>
+							</tr>
+						</thead>
+					</table>
+
 					<div class="text-center">
 						<button type="submit" class="button success semiround">Submit</button>
 					</div>
 				</div>
-				</form>
-			</div>
+			</form>
+
+
+		</div>
 	</body>
-		
+
 		<script>
-            $(document).foundation();
+            $(document).foundation();  
+              
+                console.log($("#instructorId").val());
+                    
+                $("#drop2").on( "click", function() {
+					$("#instructorId").val($("#drop2 li").attr("id"));
+					$("#instructorDropdown").text($("#drop2 li").text())
+					console.log($("#instructorId").val());
+
+				});   
+				
+				
+            
+				var nowTemp = new Date();
+				var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+				var checkin = $('#dpd1').fdatepicker({
+					onRender: function (date) {
+						return date.valueOf() < now.valueOf() ? 'disabled' : '';
+					}
+				}).on('changeDate', function (ev) {
+					if (ev.date.valueOf() > checkout.date.valueOf()) {
+						var newDate = new Date(ev.date)
+						newDate.setDate(newDate.getDate() + 1);
+						checkout.update(newDate);
+					}
+					checkin.hide();
+					$("#start").val($("#dpd1").val());
+					$('#dpd2')[0].focus();
+				}).data('datepicker');
+				var checkout = $('#dpd2').fdatepicker({
+					onRender: function (date) {
+						return date.valueOf() <= checkin.date.valueOf() ? 'disabled' : '';
+					}
+				}).on('changeDate', function (ev) {
+					checkout.hide();
+					$("#end").val($("#dpd2").val());
+				}).data('datepicker');
+				
         </script>
 
 }

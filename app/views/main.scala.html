@@ -9,14 +9,17 @@
 		<meta name="layout" content="main"/>
 		<title>@title</title>
 		<link rel="stylesheet" href='@routes.Assets.versioned("css/foundation.css")' />
+		<link rel="stylesheet" href='@routes.Assets.versioned("foundation-datepicker.css")' />
 		<link rel="stylesheet" href='@routes.Assets.versioned("css/remind-style.css")' />
-		<link rel="stylesheet" href='@routes.Assets.versioned("css/foundation.css")'/>
 		<link rel="stylesheet" href='@routes.Assets.versioned("css/remind-style.css")'>
 		<link rel="stylesheet" href='@routes.Assets.versioned("css/remind-style.css")' />
+
 		<script src='@routes.Assets.versioned("js/vendor/modernizr.js")'></script>
 		<script src='@routes.Assets.versioned("js/vendor/jquery.js")'></script>
 		<script src='@routes.Assets.versioned("js/foundation.min.js")'></script>
+		<script src='@routes.Assets.versioned("foundation-datepicker.js")'></script>
 		<script src='@routes.Assets.versioned("js/moment.min.js")'></script>
+		
 		<link rel='stylesheet' href='@routes.Assets.versioned("fullcalendar-2.3.2/fullcalendar.css")' />
 		<script src='@routes.Assets.versioned("fullcalendar-2.3.2/fullcalendar.js")'></script>
 <body>
@@ -30,10 +33,12 @@
 			</ul>
 			<section class="top-bar-section">
 				<ul class="right">
-					<li><a href="@routes.CourseController.showAllCoursesPage()">Manage Courses</a></li>
+					@if(User.byId(session.get("userId").toLong).`type` == User.Role.ADMIN) {
+						<li><a href="@routes.CourseController.showAllCoursesPage()">Manage Courses</a></li>
+						<li><a href="@routes.UserController.showAllInstructorsPage()">Manage Instructors</a></li>
+						<li><a href="@routes.UserController.showAllStudentsPage()">Manage Students</a></li>
+					}
 					<li><a href="@routes.CourseController.showMyCoursesPage()">My Courses</a></li>
-					<li><a href="@routes.UserController.showAllInstructorsPage()">Manage Instructors</a></li>
-					<li><a href="@routes.UserController.showAllStudentsPage()">Manage Students</a></li>
 					<li><a href="@routes.UserController.showInstructorProfilePage(User.byId(session.get("userId").toLong).username)">@User.byId(session.get("userId").toLong).username</a></li>
 				</ul>
 			</section>

@@ -1,23 +1,99 @@
 @main("Index") {
 
-<div class='container'>
-    Institutions: @Institution.getAll().size()
-    <br><br>
-    Super Admins: @User.getAllByRole("Super Administrator").size()
-    <br>
-    Admins: @User.getAllByRole("Administrator").size()
-    <br>
-    Instructor: @User.getAllByRole("Instructor").size()
-    <br>
-    Students: @User.getAllByRole("Student").size()
-    <br><br>
-    Courses: @Course.getAll().size()
-    <br><br>
-    Questions: @Question.getAll().size()
-    <br><br>
-    Choices: @Choice.getAll().size()
-    <br>
+	<head>
+		<title>Welcome</title>
+		<script>
+			$(document).ready(function() {
+			    // page is now ready, initialize the calendar...
+			    $('#calendar').fullCalendar({
+			        dayClick: function() {
+				        alert('a day has been clicked!');
+				    },
+			        header: {
+					    left:   'title',
+					    center: '',
+					    right:  'today prev,next'
+					}
+			    })
+			});
+		</script>
+	</head>
+	<body>
+		<div class="row">
+			<h1>Welcome!</h1>
+		</div>
+		<div class="row">
+			<div class="large-4 medium-4 small-4 columns">
+				<h4>Student Questions</h4>
+				<div class="panel radius">
+					<strong>15 Questions Awaiting Approval!</strong><br><br>
+					<table>
+						<tr>
+							<td><a href="#">BIO 1144</a></td>
+							<td><a href="#" class="button tiny alert round">4</a></td>
+						</tr>
+						<tr>
+							<td><a href="#">BIO 4499</a></td>
+							<td><a href="#" class="button tiny alert round">10</a></td>
+						</tr>
+						<tr>
+							<td><a href="#">PHYS 9999</a></td>
+							<td><a href="#" class="button tiny alert round">1</a></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="large-4 medium-4 small-4 columns right">
+				<h4>Upcoming Module Releases</h4>
+				<div id='calendar'></div>
+			</div>
+		</div>
+		<div class="row">
+			<h4>My Surveys</h4>
+			<table width="100%">
+				<tr>
+					<th>Survey Name</th>
+					<th>Course</th>
+					<th>Most Recent Submission</th>
+					<th></th>
+					<th>Students Completed</th>
+				</tr>
+				
+				@for(module <- Module.getAllModulesForInstructorByType(session.get("userId").toLong, Module.Type.getType("Survey"))){
+					<tr>
+						<td>@module.name</td>
+						<td>Course</td>
+						<td>Most Recent Submission</td>
+						<td></td>
+						<td>Students Completed</td>
+					</tr>
+				}
+				
+			</table>
+		</div>
+		<div class="row">
+			<h4>My Evaluations</h4>
+			<table width="100%">
+				<tr>
+					<th>Survey Name</th>
+					<th>Course</th>
+					<th>Most Recent Submission</th>
+					<th></th>
+					<th>Students Completed</th>
+				</tr>
 
-</div>
-
+				@for(module <- Module.getAllModulesForInstructorByType(session.get("userId").toLong, Module.Type.getType("Evaluation"))){
+					<tr>
+						<td>@module.name</td>
+						<td>Course</td>
+						<td>Most Recent Submission</td>
+						<td></td>
+						<td>Students Completed</td>
+					</tr>
+				}
+			</table>
+		</div>
+		</div>
+	</body>
+	</html>
 }

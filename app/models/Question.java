@@ -175,6 +175,19 @@ public class Question extends Model {
 				.ne("retired", true)
 				.findList();
 	}
+
+
+	//Get all Institution in the system 
+	public static List<Question> getAllQuestionsForModule(Module module) {
+		List<Long> questionIds = new ArrayList<>();
+		for (Question question : module.questions) {
+			questionIds.add(question.id);
+		}
+		return find.where()
+				.ne("retired", true)
+				.in("id", questionIds)
+				.findList();
+	}
 	
 	
 	

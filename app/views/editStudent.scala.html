@@ -1,0 +1,43 @@
+@(form: Form[forms.UserForm], student: User)
+@main("Editing Student: @student.firstName @student.lastName") {
+
+  @helper.form(routes.UserController.editInstructor(student.username)) {
+
+    <div class="row">
+      <div class="large-12 medium-12 small-12"><br>
+        <h1>Editing Student</h1>
+        <h4>@User.byUsername(student.username).firstName @User.byUsername(student.username).lastName</h4>
+      </div>
+    </div>
+    <div class="large-2 medium-2 small-2 small-centered columns"><br>
+      <div class="row">
+        <img src="../img/cookie_monster.jpg">
+      </div>
+    </div>
+    <form action="@routes.UserController.editInstructor(student.username)" method="post" enctype="multipart/form-data">
+      <div class="large-4 medium-4 small-4 small-centered columns"><br>
+        <input type="hidden" name="creatorId" value='@session.get("userId")'>
+        <input type="hidden" name="institutionId" value='@session.get("institutionId")'>
+
+        First Name
+        <input type="text" name="firstName" placeholder="First Name" value='@form("firstName").value'>
+        Last Name
+        <input type="text" name="lastName" placeholder="Last Name" value='@form("lastName").value'>
+        Email
+        <input type="text" name="email" placeholder="Email" value='@form("email").value'>
+        Username
+        @if(User.byId(session.get("userId").toLong).`type` == User.Role.ADMIN) {
+          <input type="text" name="username" placeholder="Username" value='@form("username").value'>
+        } else {
+          <input type="text" name="username" placeholder="Username" value='@form("username").value' disabled>
+        }
+        Password
+        <input type="password" name="password" placeholder="Password" value='@form("password").value'>
+        <input type="password" name="passwordRepeat" placeholder="Confirm Password" value='@form("passwordRepeat").value'>
+        <div class="text-center">
+          <button type="submit" class="button medium semiround">Submit</button>
+        </div>
+      </div>
+
+  }
+}
