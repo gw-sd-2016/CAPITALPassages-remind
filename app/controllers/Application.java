@@ -31,7 +31,10 @@ public class Application extends Controller {
     
     
     public Result showIndexPage() {
-		
+		//redirect to login page if not already logged in
+		if (session("userId") == null || User.byId(Long.parseLong(session("userId"))) == null) {
+			return redirect(routes.Application.showLoginPage());
+		}
         return ok(index.render());
     }
 
@@ -45,6 +48,7 @@ public class Application extends Controller {
 
 	
 	public static Result login() {
+		//get the return URL (assuming the user was directed to the login page from another page
 		String returnUrl = session("returnUrl");
 		if (returnUrl == null) {
 			returnUrl = "none";

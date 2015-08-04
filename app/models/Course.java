@@ -202,6 +202,20 @@ public class Course extends Model {
 	
 	
 	
+	public static long calculateDaysRemainingForCourse(Course course) {
+		Calendar endDay = Calendar.getInstance();
+		endDay.setTime(course.endDate);
+		
+		return (endDay.getTimeInMillis() - Calendar.getInstance().getTimeInMillis()) / (24 * 60 * 60 * 1000);
+	}
+	
+	
+	public static void addAnnouncement(Course course, Message announcement) {
+		course.announcements.add(announcement);
+		course.save();
+	}
+	
+	
 	////////////////////////////////////////////
 	//TEST
 	////////////////////////////////////////////
@@ -247,11 +261,11 @@ public class Course extends Model {
 			//create some modules and add them to the course
 	    	Module.createSomeModules(r.nextInt(8), course);
 	    	
-	    	//create some messages (Announcements) and add them to the course
-	    	for (int j=0; j<r.nextInt(10); j++) {
-				Message message = Message.createAMessage(Message.Type.ANNOUNCEMENT);
-				course.announcements.add(message);
-			}
+//	    	//create some messages (Announcements) and add them to the course
+//	    	for (int j=0; j<r.nextInt(10); j++) {
+//				Message message = Message.createAMessage(Message.Type.ANNOUNCEMENT);
+//				course.announcements.add(message);
+//			}
 			
 			course.save();
 		}

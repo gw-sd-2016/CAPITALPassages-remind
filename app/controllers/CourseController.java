@@ -1,6 +1,7 @@
 package controllers;
 
 
+import forms.AnnouncementForm;
 import forms.CourseForm;
 import models.Course;
 import models.User;
@@ -38,7 +39,7 @@ public class CourseController extends Controller {
 			return redirect(routes.Application.showIndexPage());
 		}
 
-		return ok(createCourse.render(form(CourseForm.class)));
+		return ok(newCourse.render(form(CourseForm.class)));
 	}
 
 
@@ -63,7 +64,7 @@ public class CourseController extends Controller {
 			return redirect(routes.Application.showIndexPage());
 		}
 
-		return ok(course.render(Course.byId(courseId)));
+		return ok(course.render(form(AnnouncementForm.class), Course.byId(courseId)));
 	}
 
 
@@ -126,7 +127,7 @@ public class CourseController extends Controller {
 		Form<CourseForm> newCourseForm = form(CourseForm.class).bindFromRequest();
 
 		if (newCourseForm.hasErrors()) {
-			return badRequest(createCourse.render(newCourseForm));
+			return badRequest(newCourse.render(newCourseForm));
 		} else {
 			Course newCourse = new Course(newCourseForm.get());
 			Course.create(newCourse);

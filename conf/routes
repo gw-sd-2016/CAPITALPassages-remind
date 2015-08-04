@@ -9,21 +9,23 @@ GET         /student/:username               @controllers.UserController.showStu
 GET         /instructor/:username            @controllers.UserController.showInstructorProfilePage(username: String)
 GET         /allInstructors                  @controllers.UserController.showAllInstructorsPage
 GET         /allStudents                     @controllers.UserController.showAllStudentsPage
-GET         /new/course                      controllers.CourseController.showCreateCoursePage()
-POST        /new/course                      controllers.CourseController.createCourse()
+GET         /createCourse                    controllers.CourseController.showCreateCoursePage()
+POST        /createCourse                    controllers.CourseController.createCourse()
 GET         /allCourses                      @controllers.CourseController.showAllCoursesPage
 GET         /myCourses                       @controllers.CourseController.showMyCoursesPage
 GET         /course/:courseId                controllers.CourseController.showCoursePage(courseId: Long)
 GET         /login                           @controllers.Application.showLoginPage()
 POST        /login                           controllers.Application.login
 
+GET         /createAnnouncement              controllers.MessageController.showCreateAnnouncementPage(courseId: Long)
+POST        /createAnnouncement              controllers.MessageController.createAnnouncement(courseId: Long)
 
 GET         /newInstructor                   controllers.UserController.showCreateInstructorPage()
 POST        /newInstructor                   controllers.UserController.createInstructor()
 GET         /editInstructor/:username        controllers.UserController.showEditInstructorPage(username: String)
-POST        /editInstructor/:username        controllers.UserController.editInstructor(username: String)
+POST        /editInstructor/:username        controllers.UserController.modifyInstructor(username: String)
 GET         /editStudent/:username           controllers.UserController.showEditStudentPage(username: String)
-POST        /editStudent/:username           controllers.UserController.editStudent(username: String)
+POST        /editStudent/:username           controllers.UserController.modifyStudent(username: String)
 
 GET         /createQuestion                  controllers.QuestionController.showCreateQuestionPage()
 

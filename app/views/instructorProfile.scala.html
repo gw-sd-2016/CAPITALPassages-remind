@@ -43,7 +43,7 @@
             <h3>Current Courses</h3>
             <ul class="no-bullet">
                 @for(course <- Course.getAllCoursesForInstructor(instructor.id)) {
-                    <li>@course.name - @course.instructor.institution.name</li>
+                    <li><a href="@routes.CourseController.showCoursePage(course.id)">@course.name</a></li>
                 }
             </ul>
         </div>

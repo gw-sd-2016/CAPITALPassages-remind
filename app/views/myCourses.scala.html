@@ -27,7 +27,7 @@
 					<tbody>
 						@for(course <- Course.getAllCoursesForInstructor(instructor.id)) {
 							<tr>
-								<td><a href="#">@course.name</a></td>
+								<td><a href="@routes.CourseController.showCoursePage(course.id)">@course.name</a></td>
 								<td>@User.getAllStudentsForCourse(course.id).size()</td>
 								<td>@course.startDate</td>
 								<td><a href="#" class="button small semiround">Edit</a>

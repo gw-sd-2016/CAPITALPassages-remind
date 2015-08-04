@@ -1,9 +1,11 @@
 package models;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 
 import com.avaje.ebean.Model;
 import com.avaje.ebean.Model.Finder;
@@ -37,6 +39,7 @@ public class ContentText extends Model {
 	/* Specific */
 	/*===========*/
 	@Required
+	@Lob
 	public String text;
 
 	@Required
@@ -79,9 +82,31 @@ public class ContentText extends Model {
 		content_text.retired = true;
 		content_text.save();
 	}
-	
-	
-	
-	
+
+
+
+	/********************************
+	 GETTERS 
+	 ********************************/
+
+	//-----------Single-------------//
+
+	//Get Basis by ID
+	public static ContentText byId(Long id) {
+		return find.where()
+				.ne("retired", true)
+				.eq("id", id)
+				.findUnique();
+	}
+
+
+	//-----------Group-------------//
+
+	//Get all Bases in the system 
+	public static List<ContentText> getAll() {
+		return find.where()
+				.ne("retired", true)
+				.findList();
+	}
 
 }

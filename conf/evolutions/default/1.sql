@@ -83,7 +83,7 @@ create table content_file (
 create table content_text (
   id                        bigint auto_increment not null,
   retired                   tinyint(1) default 0,
-  text                      varchar(255),
+  text                      longtext,
   uploader_id               bigint,
   created_time              datetime(6) not null,
   updated_time              datetime(6) not null,

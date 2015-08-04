@@ -1,4 +1,4 @@
-@(course: Course)
+@(form: Form[forms.AnnouncementForm], course: Course)
 @main("Index") {
 	<body>
 		<br>
@@ -9,32 +9,39 @@
 			<a role="button" href="#" class="button semiround">Edit</a>
 			<a role="button" href="#" class="button semiround alert">Delete</a>
 		</div>
+
+		@if(form.hasGlobalErrors) {
+			<div class="alert alert-danger">
+			@form.globalError.message
+			</div>
+		}
+		
 		<div class="row text-center" data-equalizer>
 			<div class="large-3 medium-3 small-3 columns">
 				<div class="panel callout radius" data-equalizer-watch>
 					New Student Questions<br>
-					<h3><a href="#">5</a></h3>
+					<h3><a href="#">x</a></h3>
 					<br>
 				</div>
 			</div>
 			<div class="large-3 medium-3 small-3 columns">
 				<div class="panel callout radius" data-equalizer-watch>
 					Flagged Questions<br>
-					<h3><a href="#">2</a></h3>
+					<h3><a href="#">x</a></h3>
 					<br>
 				</div>
 			</div>
 			<div class="large-3 medium-3 small-3 columns">
 				<div class="panel callout radius" data-equalizer-watch>
 					Number of Students<br>
-					<h3><a href="#">8</a></h3>
+					<h3><a href="#">@User.getAllStudentsForCourse(course.id).size()</a></h3>
 					<br>
 				</div>
 			</div>
 			<div class="large-3 medium-3 small-3 columns" >
 				<div class="panel callout radius" data-equalizer-watch>
 					Course Ends in<br>
-					<h3>32</h3>
+					<h3>@Course.calculateDaysRemainingForCourse(course).toInt</h3>
 					days
 				</div>
 			</div>
@@ -48,9 +55,31 @@
 			<div class="tabs-content vertical">
 				<div class="content active" id="panel11">
 
-					<h2>&nbsp;Announcements</h2>
-					<a role="button" href="#" class="button small semiround">Create new Announcement</a>
-					<table>
+					<h2>Announcements</h2>
+					<a role="button" data-reveal-id="createAnnouncementModal" class="button semiround">Create new Announcement</a>
+					
+					@*-------------------------*@
+					@*CREATE ANNOUNCEMENT MODAL*@
+					@*-------------------------*@
+					<div id="createAnnouncementModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+						<div class="row">
+							<form action="@routes.MessageController.createAnnouncement(course.id)" method="post" enctype="multipart/form-data">
+								<div class="large-4 medium-4 small-4 small-centered columns">
+									<h5>Message</h5>
+									<textarea name="msg" value="@form("msg").value"></textarea>
+
+									<div class="text-center">
+										<button type="submit" class="button success semiround">Submit</button>
+									</div>
+								</div>
+							</form>
+
+						</div>
+					</div>
+					
+					
+					
+					<table width="100%">
 						<thead>
 							<tr>
 								<th width="20%">Release Date</th>
@@ -59,22 +88,38 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td>June 19, 2015</td>
-								<td>Make sure to practice Modules 1-3 before the Midterm on Thursday!</td>
-								<td><a href="#" class="button semiround">Edit</a>
-									<a href="#" class="button semiround alert">Delete</a>
-								</td>
-							</tr>
-							<tr>
-								<td>June 12, 2015</td>
-								<td>Extra Credit Opportunity! Any Student that submits a new question that I add to a future Module will get extra credit!</td>
-								<td><a href="#" class="button semiround">Edit</a>
-									<a href="#" class="button semiround alert">Delete</a>
-								</td>
-							</tr>
+							@for(announcement <- Message.getAllAnnouncementsForCourse(course.id)) {
+								<tr>
+									<td>@announcement.createdTime</td>
+									<td>@announcement.prompt.text</td>
+									<td><a role="button" data-reveal-id="editAnnouncementModal" id="@announcement.id" class="button semiround">Edit</a>
+										<a href="#" class="button semiround alert">Delete</a>
+									</td>
+								</tr>
+							}
 						</tbody>
 					</table>
+				</div>
+				
+				@*-------------------------*@
+				@*EDIT ANNOUNCEMENT MODAL*@
+				@*-------------------------*@
+@*				TODO: get the edit announcement feature working*@
+				<div id="editAnnouncementModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+					<div class="row">
+						hello edit
+						@*<form action="@routes.MessageController.editAnnouncement(announcement.id)" method="post" enctype="multipart/form-data">*@
+							@*<div class="large-4 medium-4 small-4 small-centered columns">*@
+								@*<h5>Message</h5>*@
+								@*<textarea name="msg" value="@form("msg").value"></textarea>*@
+
+								@*<div class="text-center">*@
+									@*<button type="submit" class="button success semiround">Submit</button>*@
+								@*</div>*@
+							@*</div>*@
+						@*</form>*@
+
+					</div>
 				</div>
 
 				<div class="content" id="panel21">
@@ -100,20 +145,20 @@
 				<div class="content" id="panel31">
 					<p>
 				<h2>Students</h2>
-					<a role="button" href="#" class="button small semiround">Manage Enrollment</a>
+					<a role="button" href="#" class="button semiround">Manage Enrollment</a>
 					</p>
 					<ul class="tabs" data-tab>
 						<li class="tab-title active"><a href="#panel1">Daily Progress</a></li>
-						<li class="tab-title"><a href="#panel2">Evaluations</a></li>
-						<li class="tab-title"><a href="#panel3">Surveys</a></li>
+						<li class="tab-title"><a href="#panel2">Evaluations (@Module.getAllModulesForCourseByType(course.id, Module.Type.getType("Evaluation")).size())</a></li>
+						<li class="tab-title"><a href="#panel3">Surveys (@Module.getAllModulesForCourseByType(course.id, Module.Type.getType("Survey")).size())</a></li>
 					</ul>
 					<div class="tabs-content">
 						<div class="content active" id="panel1">
-							<table>
+							<table width="100%">
 								<thead>
 									<tr>
-										<th width="145">Points</th>
 										<th width="300">Name</th>
+										<th width="145">Points</th>
 										<th>Level</th>
 										<th width="150">Last Login</th>
 									</tr>
@@ -121,8 +166,8 @@
 								<tbody>
 									@for(student <- User.getAllStudentsForCourse(course.id)) {
 										<tr>
-											<td>{points}</td>
 											<td><a href="@routes.UserController.showStudentProfilePage(student.username)">@student.firstName @student.lastName</td>
+											<td>{points}</td>
 											<td>{level}</td>
 											<td>{last login}</td>
 										</tr>
@@ -131,7 +176,7 @@
 							</table>
 						</div>
 						<div class="content" id="panel2">
-							<table>
+							<table width="100%">
 								<thead>
 									<tr>
 										<th width="300">Name</th>
@@ -153,25 +198,27 @@
 							</table>
 						</div>
 						<div class="content" id="panel3">
-							<table>
+							<table width="100%">
 								<thead>
 									<tr>
 										<th width="300">Name</th>
 										@for(module <- Module.getAllModulesForCourseByType(course.id, Module.Type.getType("Survey"))) {
 											<th width="145">x</th>
 										}
-										<th width="150">Last Login</th>
 									</tr>
 								</thead>
 								<tbody>
-									@for(student <- User.getAllStudentsForCourse(course.id)) {
-										<tr>
-											<td><a href="@routes.UserController.showStudentProfilePage(student.username)">@student.firstName @student.lastName</td>
-											@for(module <- Module.getAllModulesForCourseByType(course.id, Module.Type.getType("Survey"))) {
-												<th width="145">x</th>
-											}
-											<td>9 Sept, 10:45 am</td>
-										</tr>
+									@if(Module.getAllModulesForCourseByType(course.id, Module.Type.getType("Survey")).size() <= 0) {
+										<tr><td>(No surveys for this course)</td></tr>
+									} else {
+										@for(student <- User.getAllStudentsForCourse(course.id)) {
+											<tr>
+												<td><a href="@routes.UserController.showStudentProfilePage(student.username)">@student.firstName @student.lastName</td>
+												@for(module <- Module.getAllModulesForCourseByType(course.id, Module.Type.getType("Survey"))) {
+													<th width="145">x</th>
+												}
+											</tr>
+										}
 									}
 								</tbody>
 							</table>

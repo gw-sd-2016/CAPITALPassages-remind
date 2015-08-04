@@ -25,7 +25,7 @@ public class UserController extends Controller {
 		Form<UserForm> newInstructorForm = form(UserForm.class).bindFromRequest();
 
 		if (newInstructorForm.hasErrors()) {
-			return badRequest(createInstructor.render(newInstructorForm));
+			return badRequest(newInstructor.render(newInstructorForm));
 		} else {
 			User newInstructor = new User(newInstructorForm.get());
 			User.create(newInstructor);
@@ -38,7 +38,7 @@ public class UserController extends Controller {
 	 * Edit an existing instructor and overwrite their attributes in the database
 	 * @permission A, I
 	 **********************/
-	public static Result editInstructor(String username) throws InvalidKeySpecException, NoSuchAlgorithmException {
+	public static Result modifyInstructor(String username) throws InvalidKeySpecException, NoSuchAlgorithmException {
 		Form<UserForm> form = form(UserForm.class).bindFromRequest();
 
 		if (form.hasErrors()) {
@@ -65,7 +65,7 @@ public class UserController extends Controller {
 	 * Edit an existing student and overwrite their attributes in the database
 	 * @permission A, I
 	 **********************/
-	public static Result editStudent(String username) throws InvalidKeySpecException, NoSuchAlgorithmException {
+	public static Result modifyStudent(String username) throws InvalidKeySpecException, NoSuchAlgorithmException {
 		Form<UserForm> form = form(UserForm.class).bindFromRequest();
 
 		if (form.hasErrors()) {
@@ -222,7 +222,7 @@ public class UserController extends Controller {
 			return redirect(routes.Application.showIndexPage());
 		}
 
-		return ok(createInstructor.render(form(UserForm.class)));
+		return ok(newInstructor.render(form(UserForm.class)));
 	}
 
 

@@ -12,6 +12,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
+import com.avaje.ebean.Ebean;
+import com.avaje.ebean.SqlRow;
+import forms.AnnouncementForm;
 import play.Logger;
 
 import com.avaje.ebean.Expr;
@@ -99,6 +102,17 @@ public class Message extends Model {
 	}
 
 
+	public Message(User creator, Type type, String text) {
+		Prompt prompt = Prompt.byText(text);
+		if (prompt == null) {
+			prompt = Prompt.create(new Prompt(text));
+		}
+		this.creator = creator;
+		this.type = type;
+		this.prompt = prompt;
+	}
+
+
 
 	/********************************
 	 FINDER
@@ -112,19 +126,19 @@ public class Message extends Model {
 	/********************************
 	 CREATE / DELETE 
 	 ********************************/
-	public static Message create(Message module) {
-		module.save();
-		return module;
+	public static Message create(Message message) {
+		message.save();
+		return message;
 	}
 
 	public static void delete(Long id) {
-		Message module = find.ref(id);
-		if (module == null) {
+		Message message = find.ref(id);
+		if (message == null) {
 			return;
 		}
 
-		module.retired = true;
-		module.save();
+		message.retired = true;
+		message.save();
 	}
 
 
@@ -151,6 +165,24 @@ public class Message extends Model {
 		return find.where()
 				.ne("retired", true)
 				.findList();
+	}
+	
+	
+	public static List<Message> getAllAnnouncementsForCourse(Long courseId) {
+		String sql = "select * from message " +
+					 "where id in " +
+						"(select message_id from course_message " +
+						"where course_id=" +courseId + " " +
+						"and type=" + Type.ANNOUNCEMENT.ordinal() + ")";
+
+		List<Message> allAnnouncements = new ArrayList<>();
+		for (SqlRow row : Ebean.createSqlQuery(sql).findList()) {
+			if (!row.getBoolean("retired")) {
+				allAnnouncements.add(Message.byId(row.getLong("id")));
+			}
+		}
+		
+		return allAnnouncements;
 	}
 
 

@@ -1,7 +1,7 @@
 @(form: Form[forms.UserForm], instructor: User)
 @main("Register a New Instructor") {
 
-	@helper.form(routes.UserController.editInstructor(instructor.username)) {
+	@helper.form(routes.UserController.modifyInstructor(instructor.username)) {
 
 		<div class="row">
 			<div class="large-12 medium-12 small-12"><br>
@@ -14,7 +14,7 @@
 				<img src="../img/cookie_monster.jpg">
 			</div>
 		</div>
-		<form action="@routes.UserController.editInstructor(instructor.username)" method="post" enctype="multipart/form-data">
+		<form action="@routes.UserController.modifyInstructor(instructor.username)" method="post" enctype="multipart/form-data">
 			<div class="large-4 medium-4 small-4 small-centered columns"><br>
 				<input type="hidden" name="creatorId" value='@session.get("userId")'>
 				<input type="hidden" name="institutionId" value='@session.get("institutionId")'>

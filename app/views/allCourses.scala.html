@@ -29,7 +29,7 @@
 	                    
 	                    @for(course <- Course.getAllCoursesForInstitution(institution.id)) {
 	                        <tr>
-		                        <td><a href="#">@course.name</a></td>
+		                        <td><a href="@routes.CourseController.showCoursePage(course.id)">@course.name</a></td>
 		                        <td><a href="@routes.UserController.showInstructorProfilePage(course.instructor.username)">@course.instructor.firstName @course.instructor.lastName</a></td>
 		                        <td>@User.getAllStudentsForCourse(course.id).size()</td>
 		                        <td>@course.startDate</td>

@@ -38,6 +38,6 @@ public class QuestionController extends Controller {
 			return redirect(routes.Application.showIndexPage());
 		}
 
-		return ok(createQuestion.render());
+		return ok(newQuestion.render());
 	}
 }

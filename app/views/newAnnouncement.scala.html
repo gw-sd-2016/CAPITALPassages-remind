@@ -1,0 +1,39 @@
+@(form: Form[forms.AnnouncementForm], course: Course)
+@main("Index") {
+
+	<html class="no-js" lang="en">
+		<head>
+			<meta charset="utf-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+			<title>Create Announcement</title>
+
+	<body>
+		<div class="row">
+			<div class="large-12 medium-12 small-12">
+				<h1>Create a New Announcement</h1>
+				<h4>@course.name</h4>
+				<br>
+			</div>
+		</div>
+		@if(form.hasGlobalErrors) {
+			<div class="alert alert-danger">
+				@form.globalError.message
+			</div>
+		}
+		<div class="row">
+			<form action="@routes.MessageController.createAnnouncement(course.id)" method="post" enctype="multipart/form-data">
+				<div class="large-4 medium-4 small-4 small-centered columns">
+					<h5>Message</h5>
+					<textarea name="msg" value="@form("msg").value"></textarea>
+
+					<div class="text-center">
+						<button type="submit" class="button success semiround">Submit</button>
+					</div>
+				</div>
+			</form>
+
+		</div>
+
+	</body>
+
+}

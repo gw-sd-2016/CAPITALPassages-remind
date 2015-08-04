@@ -122,7 +122,7 @@ public class Content extends Model {
 			case 1:
 				String text = ng.getName();
 				for (int i=0; i < r.nextInt(200); i++) {
-					text += ng.getName().toLowerCase();
+					text += ng.getName().toLowerCase() + " ";
 				}
 				ContentText ct = new ContentText(text, userId);
 				ContentText.create(ct);
