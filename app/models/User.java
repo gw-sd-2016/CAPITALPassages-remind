@@ -247,7 +247,21 @@ public class User extends Model {
 					.or(Expr.eq("username", usernameOrEmail), Expr.eq("email", usernameOrEmail))
 				.findUnique();
 	}
-
+	//Aidan and Dhruv
+	// Returns All Students for a given Institution where the student is not in the specified course
+	public static List<User> getAllStudentsForInstitutionNotInCourse(Long institutionId, Long courseId) { 
+		String sql = "select * from user where id in " + 
+		"(select student_id from student_in_institution" + 
+			" where institution_id = " + institutionId + 
+			" and retired=false) and id not in (select user_id from course_user"+ 
+			" where course_id = " + courseId+") and retired=false";
+		
+		List<User> students = new ArrayList<User>();
+		for (SqlRow row : Ebean.createSqlQuery(sql).findList()) {
+			students.add(User.byId(row.getLong("id")));
+		}
+		return students;
+	}
 	
 	//-----------Group-------------//
 

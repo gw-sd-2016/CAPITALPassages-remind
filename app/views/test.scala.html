@@ -1,8 +1,8 @@
 <html>
 	<body>
 	<ul>
-		@for(question <- StudentQuestion.getAllStudentQuestionsForStudentByStatus(1,"Accepted")) {
-		        <li>@question.questionId</li>
+		@for(student <- User.getAllStudentsForInstitionNotInCourse(1, 1)) {
+		        <li>@student.username</li>
 		    }
 	</ul>
 	</body>
