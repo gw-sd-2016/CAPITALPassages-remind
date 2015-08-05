@@ -196,6 +196,7 @@ create table question (
   retired                   tinyint(1) default 0,
   message_id                bigint,
   type                      integer,
+  submitter_id              bigint,
   has_subquestions          tinyint(1) default 0,
   is_global                 tinyint(1) default 0,
   created_time              datetime(6) not null,
@@ -368,10 +369,12 @@ alter table module add constraint fk_module_course_5 foreign key (course_id) ref
 create index ix_module_course_5 on module (course_id);
 alter table question add constraint fk_question_message_6 foreign key (message_id) references message (id) on delete restrict on update restrict;
 create index ix_question_message_6 on question (message_id);
-alter table question_record add constraint fk_question_record_listRecord_7 foreign key (list_record_id) references list_record (id) on delete restrict on update restrict;
-create index ix_question_record_listRecord_7 on question_record (list_record_id);
-alter table user add constraint fk_user_institution_8 foreign key (institution_id) references institution (id) on delete restrict on update restrict;
-create index ix_user_institution_8 on user (institution_id);
+alter table question add constraint fk_question_submitter_7 foreign key (submitter_id) references user (id) on delete restrict on update restrict;
+create index ix_question_submitter_7 on question (submitter_id);
+alter table question_record add constraint fk_question_record_listRecord_8 foreign key (list_record_id) references list_record (id) on delete restrict on update restrict;
+create index ix_question_record_listRecord_8 on question_record (list_record_id);
+alter table user add constraint fk_user_institution_9 foreign key (institution_id) references institution (id) on delete restrict on update restrict;
+create index ix_user_institution_9 on user (institution_id);
 
 
 

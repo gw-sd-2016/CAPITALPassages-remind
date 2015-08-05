@@ -26,6 +26,7 @@ GET         /editInstructor/:username        controllers.UserController.showEdit
 POST        /editInstructor/:username        controllers.UserController.modifyInstructor(username: String)
 GET         /editStudent/:username           controllers.UserController.showEditStudentPage(username: String)
 POST        /editStudent/:username           controllers.UserController.modifyStudent(username: String)
+GET         /test         					 controllers.UserController.test()
 
 GET         /createQuestion                  controllers.QuestionController.showCreateQuestionPage()
 

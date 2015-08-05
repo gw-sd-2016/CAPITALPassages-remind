@@ -34,7 +34,7 @@ public class StudentQuestion extends Model {
 			Status type = null;
 			
 			switch(typeString) {
-				case "In Reciew":
+				case "In Review":
 					type = IN_REVIEW;
 					break;
 				case "Accepted":
@@ -146,8 +146,24 @@ public class StudentQuestion extends Model {
 					.ne("retired", true)
 				.findList();
 	}
-	
-	
+	//Aidan
+	//Retuns a list of all Student Questions that are Marked with the given status
+	public static List<StudentQuestion> getAllStudentQuestionsForStudentByStatus(Long studentId, String status)
+	{
+		
+	String sql = "select * from student_question" +
+				 " where question_id in " +
+					"(select id from question" +
+			 		" where submitter_id = " + studentId + 
+					" and retired = false)" +
+				" and status = "+ Status.getType(status).ordinal();
+
+		List<StudentQuestion> questions = new ArrayList<StudentQuestion>();
+		for (SqlRow row : Ebean.createSqlQuery(sql).findList()) {
+			questions.add(StudentQuestion.byId(row.getLong("id")));
+		}
+		return questions;
+	}
 	
 	
 	

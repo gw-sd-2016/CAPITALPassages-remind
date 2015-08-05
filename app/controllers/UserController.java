@@ -200,7 +200,6 @@ public class UserController extends Controller {
 		return ok(allStudents.render(loggedInUser.institution));
 	}
 
-
 	/**********************
 	 * Load the page to create a new instructor
 	 * @permission A
@@ -293,4 +292,9 @@ public class UserController extends Controller {
 
 		return ok(editStudent.render(form, User.byUsername(username)));
 	}
+
+	public static Result test(){
+		return ok(test.render());
+	}
 }
+

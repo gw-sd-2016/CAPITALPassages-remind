@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 import com.avaje.ebean.Model;
 import com.avaje.ebean.annotation.CreatedTimestamp;
@@ -77,6 +78,7 @@ public class Question extends Model {
 //	EvaluationType evalType;
 	
 	@Required
+	@ManyToOne
 	public User submitter;
 
 	@Required

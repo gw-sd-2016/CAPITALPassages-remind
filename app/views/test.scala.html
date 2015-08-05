@@ -1,0 +1,9 @@
+<html>
+	<body>
+	<ul>
+		@for(question <- StudentQuestion.getAllStudentQuestionsForStudentByStatus(1,"a")) {
+		        <li>@question.questionId</li>
+		    }
+	</ul>
+	</body>
+</html>

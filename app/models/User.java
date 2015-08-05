@@ -22,7 +22,6 @@ import forms.UserForm;
 import play.data.validation.Constraints.*;
 import utilities.PasswordHash;
 
-
 @Entity
 public class User extends Model {
 	
@@ -282,14 +281,17 @@ public class User extends Model {
 	// Get all instructor Users at a given institution
 	public static List<User> getAllInstructorsForInstitution(Long institutionId) {
 		return find.where()
+					.eq("retired", false)
 					.eq("type", Role.INSTRUCTOR)
 					.eq("institution_id", institutionId)
+					.eq("institution.retired", false)
 				.findList();
 	}
 
 
 	// Get all student Users at a given institution
 	public static List<User> getAllStudentsForInstitution(Long institutionId) {
+		System.out.print(institutionId);
 		String sql = "select * from user" +
 					 " where id in " +
 							"(select student_id from student_in_institution" +
@@ -304,8 +306,19 @@ public class User extends Model {
 		
 		return allStudents;
 	}
-
-
+	/*
+	public static List<User> getAllStudentsForCourse(Long courseId) {
+		return find.where()	
+					.eq("retired", 0)
+					.eq("type", Role.STUDENT)
+					.eq("course_id", courseId)
+					.fetch("course", new FetchConfig().query())  
+        			.fetch("course.retired")  
+					.eq("course.retired", 0)
+					.findList();
+	}
+	*/
+	
 	// Get all student Users in a given course
 	public static List<User> getAllStudentsForCourse(Long courseId) {
 		String sql = "select * from user" +
