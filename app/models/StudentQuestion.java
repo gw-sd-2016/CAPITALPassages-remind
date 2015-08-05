@@ -157,7 +157,7 @@ public class StudentQuestion extends Model {
 				 " where question_id in " +
 					"(select id from question" +
 			 		" where submitter_id = " + studentId + 
-					" and retired = false)" +
+					" and retired = 0)" +
 					" and status = "+ 
 					Status.getType(status).ordinal();
 
