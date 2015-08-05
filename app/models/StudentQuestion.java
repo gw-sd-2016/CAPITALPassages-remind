@@ -10,7 +10,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Expr;
+import com.avaje.ebean.SqlRow;
 import com.avaje.ebean.Model;
 import com.avaje.ebean.annotation.CreatedTimestamp;
 import com.avaje.ebean.annotation.UpdatedTimestamp;
@@ -156,7 +158,8 @@ public class StudentQuestion extends Model {
 					"(select id from question" +
 			 		" where submitter_id = " + studentId + 
 					" and retired = false)" +
-				" and status = "+ Status.getType(status).ordinal();
+					" and status = "+ 
+					Status.getType(status).ordinal();
 
 		List<StudentQuestion> questions = new ArrayList<StudentQuestion>();
 		for (SqlRow row : Ebean.createSqlQuery(sql).findList()) {

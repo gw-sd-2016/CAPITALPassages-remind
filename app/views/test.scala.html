@@ -1,7 +1,7 @@
 <html>
 	<body>
 	<ul>
-		@for(question <- StudentQuestion.getAllStudentQuestionsForStudentByStatus(1,"a")) {
+		@for(question <- StudentQuestion.getAllStudentQuestionsForStudentByStatus(1,"Accepted")) {
 		        <li>@question.questionId</li>
 		    }
 	</ul>
