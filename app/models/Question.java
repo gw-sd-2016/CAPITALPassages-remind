@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.ManyToOne;
@@ -46,6 +47,7 @@ public class Question extends Model {
 			
 			return type;
 		}
+		
 	}
 	
 	/********************************
@@ -76,8 +78,7 @@ public class Question extends Model {
 
 //	@Required
 //	EvaluationType evalType;
-	
-	@Required
+
 	@ManyToOne
 	public User submitter;
 
@@ -171,7 +172,7 @@ public class Question extends Model {
 
 	//-----------Group-------------//
 
-	//Get all Institution in the system 
+	//Get all Questions in the system 
 	public static List<Question> getAll() {
 		return find.where()
 				.ne("retired", true)
@@ -179,7 +180,7 @@ public class Question extends Model {
 	}
 
 
-	//Get all Institution in the system 
+	//Get all Questions for a given Module
 	public static List<Question> getAllQuestionsForModule(Module module) {
 		List<Long> questionIds = new ArrayList<>();
 		for (Question question : module.questions) {

@@ -15,7 +15,7 @@
 			@form.globalError.message
 			</div>
 		}
-		
+
 		<div class="row text-center" data-equalizer>
 			<div class="large-3 medium-3 small-3 columns">
 				<div class="panel callout radius" data-equalizer-watch>
@@ -57,28 +57,26 @@
 
 					<h2>Announcements</h2>
 					<a role="button" data-reveal-id="createAnnouncementModal" class="button semiround">Create new Announcement</a>
-					
+
 					@*-------------------------*@
 					@*CREATE ANNOUNCEMENT MODAL*@
 					@*-------------------------*@
-					<div id="createAnnouncementModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
-						<div class="row">
-							<form action="@routes.MessageController.createAnnouncement(course.id)" method="post" enctype="multipart/form-data">
-								<div class="large-4 medium-4 small-4 small-centered columns">
-									<h5>Message</h5>
-									<textarea name="msg" value="@form("msg").value"></textarea>
+					<div id="createAnnouncementModal" style="height:400px" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+						<iframe frameborder="0" src="@routes.MessageController.showCreateAnnouncementPage(course.id)" width="100%" height="100%"></iframe>
+						<a id="closeModal" class="close-reveal-modal" aria-label="Close">&#215;</a>
 
-									<div class="text-center">
-										<button type="submit" class="button success semiround">Submit</button>
-									</div>
-								</div>
-							</form>
-
-						</div>
+						<script>
+							$('#closeModal').foundation('reveal', 'close');
+							
+							$(document).on("click", "#closeModal", function(){
+								location.reload(true);
+							});
+						</script>
 					</div>
-					
-					
-					
+
+
+
+
 					<table width="100%">
 						<thead>
 							<tr>
@@ -88,39 +86,64 @@
 							</tr>
 						</thead>
 						<tbody>
-							@for(announcement <- Message.getAllAnnouncementsForCourse(course.id)) {
-								<tr>
-									<td>@announcement.createdTime</td>
-									<td>@announcement.prompt.text</td>
-									<td><a role="button" data-reveal-id="editAnnouncementModal" id="@announcement.id" class="button semiround">Edit</a>
-										<a href="#" class="button semiround alert">Delete</a>
-									</td>
-								</tr>
-							}
+						@for(announcement <- Message.getAllAnnouncementsForCourse(course.id)) {
+							<tr>
+								<td>@announcement.createdTime</td>
+								<td>@announcement.prompt.text</td>
+								<td><a role="button" data-reveal-id="editAnnouncementModal" id="@announcement.id" class="button semiround editAnnouncementButton">Edit</a>
+									<a role="button" data-reveal-id="deleteAnnouncementModal" class="button semiround alert">Delete</a>
+								</td>
+								@*--------------------------*@
+								@*EDIT ANNOUNCEMENT MODAL(S)*@
+								@*--------------------------*@
+								@*TODO: Change this so that only the desired iframe edit page loads when the Edit buttons is clicked*@
+								<div id="editAnnouncementModal" style="height:400px" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+									<iframe class='iframe' frameborder="0" src="@routes.MessageController.showEditAnnouncementPage(announcement.id)" width="100%" height="100%"></iframe>
+									<a id="closeModal" class="close-reveal-modal" aria-label="Close">&#215;</a>
+
+									<script>
+										//on click of close button, close the modal and reload the page
+										$('#closeModal').foundation('reveal', 'close');
+										$(document).on("click", "#closeModal", function(){
+											location.reload(true);
+										});
+									</script>
+								</div>
+
+
+								@*--------------------------*@
+								@*DELETE ANNOUNCEMENT MODAL(S)*@
+								@*--------------------------*@
+								@*TODO: Change this so that only the desired iframe edit page loads when the Delete button is clicked*@
+								<div id="deleteAnnouncementModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+										<h2 id="modalTitle">Confirm Delete</h2>
+										<p class="lead">Are you sure you want to delete this Announcement?</p>
+										<a class="close-reveal-modal" aria-label="Close">&#215;</a>
+
+										<button class="button semiround">Cancel</button>
+										<button id="delete-@announcement.id" class="button semiround alert deleteBtn">Delete</button>
+								</div>
+								
+								<script>
+									$(".deleteBtn").on("click", function() {
+										var id = $(this).attr('id').split("-")[1];
+										jsRoutes.controllers.MessageController.delete(id).ajax({
+										    success : function(data) {
+										        window.location.reload();
+										    },
+										    error : function(err) {
+										    }
+										});
+									});
+								</script>
+							</tr>
+						}
 						</tbody>
 					</table>
 				</div>
-				
-				@*-------------------------*@
-				@*EDIT ANNOUNCEMENT MODAL*@
-				@*-------------------------*@
-@*				TODO: get the edit announcement feature working*@
-				<div id="editAnnouncementModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
-					<div class="row">
-						hello edit
-						@*<form action="@routes.MessageController.editAnnouncement(announcement.id)" method="post" enctype="multipart/form-data">*@
-							@*<div class="large-4 medium-4 small-4 small-centered columns">*@
-								@*<h5>Message</h5>*@
-								@*<textarea name="msg" value="@form("msg").value"></textarea>*@
 
-								@*<div class="text-center">*@
-									@*<button type="submit" class="button success semiround">Submit</button>*@
-								@*</div>*@
-							@*</div>*@
-						@*</form>*@
 
-					</div>
-				</div>
+
 
 				<div class="content" id="panel21">
 					<p>
@@ -130,15 +153,15 @@
 					</p>
 					<div class="panel" width="100%">
 						<ul class="small-block-grid-2 medium-block-grid-3 large-block-grid-4">
-							@for(module <- Module.getAllModulesForCourse(course.id)) {
-								<li>
-									<div class="panel">
-										<h4>Module @module.orderIndex</h4>
-										<p>@Question.getAllQuestionsForModule(module).size() Questions</p>
-										<a href="#" class="button semiround">Edit</a>
-									</div>
-								</li>
-							}
+						@for(module <- Module.getAllModulesForCourse(course.id)) {
+							<li>
+								<div class="panel">
+									<h4>Module @module.orderIndex</h4>
+									<p>@Question.getAllQuestionsForModule(module).size() Questions</p>
+									<a href="#" class="button semiround">Edit</a>
+								</div>
+							</li>
+						}
 						</ul>
 					</div>
 				</div>
@@ -164,14 +187,14 @@
 									</tr>
 								</thead>
 								<tbody>
-									@for(student <- User.getAllStudentsForCourse(course.id)) {
-										<tr>
-											<td><a href="@routes.UserController.showStudentProfilePage(student.username)">@student.firstName @student.lastName</td>
-											<td>{points}</td>
-											<td>{level}</td>
-											<td>{last login}</td>
-										</tr>
-									}
+								@for(student <- User.getAllStudentsForCourse(course.id)) {
+									<tr>
+										<td><a href="@routes.UserController.showStudentProfilePage(student.username)">@student.firstName @student.lastName</td>
+										<td>{points}</td>
+										<td>{level}</td>
+										<td>{last login}</td>
+									</tr>
+								}
 								</tbody>
 							</table>
 						</div>
@@ -186,14 +209,14 @@
 									</tr>
 								</thead>
 								<tbody>
-									@for(student <- User.getAllStudentsForCourse(course.id)) {
-										<tr>
-											<td><a href="@routes.UserController.showStudentProfilePage(student.username)">@student.firstName @student.lastName</td>
-											@for(module <- Module.getAllModulesForCourseByType(course.id, Module.Type.getType("Evaluation"))) {
-												<td>{score}</td>
-											}
-										</tr>
-									}
+								@for(student <- User.getAllStudentsForCourse(course.id)) {
+									<tr>
+										<td><a href="@routes.UserController.showStudentProfilePage(student.username)">@student.firstName @student.lastName</td>
+										@for(module <- Module.getAllModulesForCourseByType(course.id, Module.Type.getType("Evaluation"))) {
+											<td>{score}</td>
+										}
+									</tr>
+								}
 								</tbody>
 							</table>
 						</div>
@@ -208,18 +231,18 @@
 									</tr>
 								</thead>
 								<tbody>
-									@if(Module.getAllModulesForCourseByType(course.id, Module.Type.getType("Survey")).size() <= 0) {
-										<tr><td>(No surveys for this course)</td></tr>
-									} else {
-										@for(student <- User.getAllStudentsForCourse(course.id)) {
-											<tr>
-												<td><a href="@routes.UserController.showStudentProfilePage(student.username)">@student.firstName @student.lastName</td>
-												@for(module <- Module.getAllModulesForCourseByType(course.id, Module.Type.getType("Survey"))) {
-													<th width="145">x</th>
-												}
-											</tr>
-										}
+								@if(Module.getAllModulesForCourseByType(course.id, Module.Type.getType("Survey")).size() <= 0) {
+									<tr><td>(No surveys for this course)</td></tr>
+								} else {
+									@for(student <- User.getAllStudentsForCourse(course.id)) {
+										<tr>
+											<td><a href="@routes.UserController.showStudentProfilePage(student.username)">@student.firstName @student.lastName</td>
+											@for(module <- Module.getAllModulesForCourseByType(course.id, Module.Type.getType("Survey"))) {
+												<th width="145">x</th>
+											}
+										</tr>
 									}
+								}
 								</tbody>
 							</table>
 						</div>

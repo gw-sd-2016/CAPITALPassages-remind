@@ -148,20 +148,18 @@ public class StudentQuestion extends Model {
 					.ne("retired", true)
 				.findList();
 	}
+	
 	//Aidan
-	//Retuns a list of all Student Questions that are Marked with the given status
-	public static List<StudentQuestion> getAllStudentQuestionsForStudentByStatus(Long studentId, String status)
-	{
-		
-	String sql = "select * from student_question" +
-				 " where question_id in " +
-					"(select id from question" +
-			 		" where submitter_id = " + studentId + 
-					" and retired = 0)" +
-					" and status = "+ 
-					Status.getType(status).ordinal();
+	//Retuns a list of all Student Questions that are marked with the given status
+	public static List<StudentQuestion> getAllStudentQuestionsForStudentByStatus(Long studentId, String status) {
+		String sql = "select * from student_question" +
+					 " where question_id in " +
+						"(select id from question" +
+						" where submitter_id = " + studentId + 
+						" and retired = 0)" +
+					 " and status = " + Status.getType(status).ordinal();
 
-		List<StudentQuestion> questions = new ArrayList<StudentQuestion>();
+		List<StudentQuestion> questions = new ArrayList<>();
 		for (SqlRow row : Ebean.createSqlQuery(sql).findList()) {
 			questions.add(StudentQuestion.byId(row.getLong("id")));
 		}

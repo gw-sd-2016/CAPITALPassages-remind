@@ -1,5 +1,11 @@
 @(form: Form[forms.AnnouncementForm], course: Course)
-@main("Index") {
+@main("Index", false) {
+
+	<style type="text/css">
+	html {
+	overflow : hidden ;
+	}
+	</style>
 
 	<html class="no-js" lang="en">
 		<head>
@@ -11,28 +17,33 @@
 		<div class="row">
 			<div class="large-12 medium-12 small-12">
 				<h1>Create a New Announcement</h1>
-				<h4>@course.name</h4>
 				<br>
 			</div>
 		</div>
 		@if(form.hasGlobalErrors) {
-			<div class="alert alert-danger">
-				@form.globalError.message
+			<div data-alert class="alert alert-box">
+			@form.globalError.message
 			</div>
 		}
-		<div class="row">
-			<form action="@routes.MessageController.createAnnouncement(course.id)" method="post" enctype="multipart/form-data">
-				<div class="large-4 medium-4 small-4 small-centered columns">
-					<h5>Message</h5>
-					<textarea name="msg" value="@form("msg").value"></textarea>
+		@if(flash.containsKey("success")) {
+			<div data-alert class="alert-box">
+				@flash.get("success")
+			</div>
+		} else {
+			<div class="row">
+				<form id="announcementForm" method="post" enctype="multipart/form-data">
+					<div class="large-4 medium-4 small-4 small-centered columns">
+						<h5>Message</h5>
+						<textarea name="msg" value="@form("msg").value"></textarea>
 
-					<div class="text-center">
-						<button type="submit" class="button success semiround">Submit</button>
+						<div class="text-center">
+							<button id="submit" type="submit" class="button success semiround">Submit</button>
+						</div>
 					</div>
-				</div>
-			</form>
+				</form>
 
-		</div>
+			</div>
+		}
 
 	</body>
 

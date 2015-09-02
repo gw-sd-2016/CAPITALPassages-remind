@@ -33,8 +33,8 @@
                         <tr>
                             <td><a href="@routes.UserController.showInstructorProfilePage(instructor.username)">@instructor.firstName @instructor.lastName</a></td>
                             <td>@instructor.username</td>
-                            <td><a href="#" class="button small semiround">Edit</a>
-                                <a href="#" class="button small alert semiround">Delete</a>
+                            <td><a href="@routes.UserController.showEditInstructorPage(instructor.username)" class="button semiround">Edit</a>
+                                <a href="#" class="button alert semiround">Delete</a>
                             </td>
                         </tr>
                     }

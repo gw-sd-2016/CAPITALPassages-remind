@@ -56,8 +56,7 @@ public class UserController extends Controller {
 		}
 		
 		flash("success", "Instructor's profile has been modified.");
-		//TODO: redirect to course's individual page
-		return redirect(routes.CourseController.showAllCoursesPage());
+		return redirect(routes.UserController.showInstructorProfilePage(username));
 	}
 
 
@@ -82,9 +81,8 @@ public class UserController extends Controller {
 			User.create(student);
 		}
 
-		flash("success", "Instructor's profile has been modified.");
-		//TODO: redirect to course's individual page
-		return redirect(routes.CourseController.showAllCoursesPage());
+		flash("success", "Student's profile has been modified.");
+		return redirect(routes.UserController.showStudentProfilePage(username));
 	}
 	
 	
@@ -293,8 +291,5 @@ public class UserController extends Controller {
 		return ok(editStudent.render(form, User.byUsername(username)));
 	}
 
-	public static Result test(){
-		return ok(test.render());
-	}
 }
 

@@ -3,53 +3,60 @@
 @main("Profile: " + instructor.firstName + " " + instructor.lastName, true) {
 
 
-<div class="row">
-    <div class="large-12 medium-12 small-12 columns"><br>
-        <h1>@instructor.firstName @instructor.lastName</h1>
-        <h4>@instructor.institution.name</h4>
-        <a href="@routes.UserController.showEditInstructorPage(instructor.username)" class="button medium semiround">Edit Instructor</a><br><br><br>
-    </div>
-</div>
-<div class="row">
-    <div class="large-5 medium-5 small-5 columns">
-        <img src="../img/cookie_monster.jpg">
-    </div>
-    <br>
-    <div class="large-7 medium-7 small-7 columns panel text-bottom">
-        <table class="full-width">
-            <tr>
-                <th>First Name</th>
-                <td>@instructor.firstName</td>
-            </tr>
-            <tr>
-                <th>Last Name</th>
-                <td>@instructor.lastName</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>@instructor.email</td>
-            </tr>
-            <tr>
-                <th>Username</th>
-                <td>@instructor.username</td>
-            </tr>
-        </table>
-    </div>
-</div>
-<br>
-<div class="row">
-    <div class="large-12 medium-12 small-12 columns">
-        <div class="panel">
-            <h3>Current Courses</h3>
-            <ul class="no-bullet">
-                @for(course <- Course.getAllCoursesForInstructor(instructor.id)) {
-                    <li><a href="@routes.CourseController.showCoursePage(course.id)">@course.name</a></li>
-                }
-            </ul>
-        </div>
-    </div>
-</div>
-</body>
-</html>
+	<div class="row">
+		<div class="large-12 medium-12 small-12 columns"><br>
+			<h1>@instructor.firstName @instructor.lastName</h1>
+			<h4>@instructor.institution.name</h4>
+			
+			<a href="@routes.UserController.showEditInstructorPage(instructor.username)" class="button medium semiround">
+				@if(instructor.id == session.get("userId").toLong) {
+					Edit My Profile
+				} else {
+					Edit Instructor
+				}
+			</a><br><br><br>
+		</div>
+	</div>
+	<div class="row">
+		<div class="large-5 medium-5 small-5 columns">
+			<img src="../img/cookie_monster.jpg">
+		</div>
+		<br>
+		<div class="large-7 medium-7 small-7 columns panel text-bottom">
+			<table class="full-width">
+				<tr>
+					<th>First Name</th>
+					<td>@instructor.firstName</td>
+				</tr>
+				<tr>
+					<th>Last Name</th>
+					<td>@instructor.lastName</td>
+				</tr>
+				<tr>
+					<th>Email</th>
+					<td>@instructor.email</td>
+				</tr>
+				<tr>
+					<th>Username</th>
+					<td>@instructor.username</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<br>
+	<div class="row">
+		<div class="large-12 medium-12 small-12 columns">
+			<div class="panel">
+				<h3>Current Courses</h3>
+				<ul class="no-bullet">
+				@for(course <- Course.getAllCoursesForInstructor(instructor.id)) {
+					<li><a href="@routes.CourseController.showCoursePage(course.id)">@course.name</a></li>
+				}
+				</ul>
+			</div>
+		</div>
+	</div>
+	</body>
+	</html>
 
 }

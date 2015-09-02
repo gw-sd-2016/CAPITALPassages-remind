@@ -323,14 +323,19 @@ public class User extends Model {
 
 		return allStudents;
 	}
+	
 	//Aidan and Dhruv
-	// Returns All Students for a given Institution where the student is not in the specified course
+	// Returns all Students for a given Institution where the student is not in the specified course
 	public static List<User> getAllStudentsForInstitutionNotInCourse(Long institutionId, Long courseId) { 
-		String sql = "select * from user where id in " + 
-		"(select student_id from student_in_institution" + 
-			" where institution_id = " + institutionId + 
-			" and retired=false) and id not in (select user_id from course_user"+ 
-			" where course_id = " + courseId+") and retired=false";
+		String sql = "select * from user " +
+					 "where id in " + 
+						"(select student_id from student_in_institution" + 
+						" where institution_id = " + institutionId + 
+						" and retired=false) " +
+					 "and id not in " +
+						"(select user_id from course_user"+ 
+						" where course_id = " + courseId+") " +
+					 "and retired=false";
 		
 		List<User> students = new ArrayList<User>();
 		for (SqlRow row : Ebean.createSqlQuery(sql).findList()) {
@@ -338,14 +343,16 @@ public class User extends Model {
 		}
 		return students;
 	}
+	
 	//Aidan
-	// Returns All Students for a given Institution where the student is not in the specified course
+	// Returns all Students that belong to a given question list
 	public static List<User> getAllStudentsForQuestionList(Long questionListId) { 
 		//when to put retired?
-		String sql = "select * from user where id in " + 
-		"(select user_id from question_list_user" + 
-			" where question_list_id = " + questionListId + 
-			" and retired=false) and retired=0";
+		String sql = "select * from user " +
+					 "where id in " + 
+						"(select user_id from question_list_user" + 
+						" where question_list_id = " + questionListId + ") " +
+					 "and retired=0";
 		
 		List<User> students = new ArrayList<User>();
 		for (SqlRow row : Ebean.createSqlQuery(sql).findList()) {
@@ -353,11 +360,12 @@ public class User extends Model {
 		}
 		return students;
 	}
+	
+	
+	
 	////////////////////////////////////////////
 	//TEST
 	////////////////////////////////////////////
-	
-	
 	public static class NameGenerator {
 
 		private List<String> vocals = new ArrayList<String>();

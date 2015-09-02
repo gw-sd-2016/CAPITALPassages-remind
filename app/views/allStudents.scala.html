@@ -30,8 +30,8 @@
                         <td><a href="@routes.UserController.showStudentProfilePage(student.username)">@student.firstName @student.lastName</a></td>
                         <td>@student.email</td>
                         <td>@student.username</td>
-                        <td><a href="#" class="button small semiround">Edit</a>
-                            <a href="#" class="button small alert semiround">Delete</a>
+                        <td><a href="@routes.UserController.showEditStudentPage(student.username)" class="button semiround">Edit</a>
+                            <a href="#" class="button alert semiround">Delete</a>
                         </td>
                     </tr>
                     }

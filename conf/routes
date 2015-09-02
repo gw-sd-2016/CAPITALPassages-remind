@@ -4,7 +4,11 @@
 
 # Home page
 GET         /                                @controllers.Application.showIndexPage
+GET         /javascriptRoutes                controllers.Application.javascriptRoutes
 GET         /populate                        @controllers.Application.populate
+
+POST        /deleteAnnouncement              controllers.MessageController.delete(announcementId: Long)
+
 GET         /student/:username               @controllers.UserController.showStudentProfilePage(username: String)
 GET         /instructor/:username            @controllers.UserController.showInstructorProfilePage(username: String)
 GET         /allInstructors                  @controllers.UserController.showAllInstructorsPage
@@ -19,6 +23,8 @@ POST        /login                           controllers.Application.login
 
 GET         /createAnnouncement              controllers.MessageController.showCreateAnnouncementPage(courseId: Long)
 POST        /createAnnouncement              controllers.MessageController.createAnnouncement(courseId: Long)
+GET         /editAnnouncement                controllers.MessageController.showEditAnnouncementPage(announcementId: Long)
+POST        /editAnnouncement                controllers.MessageController.modifyAnnouncement(announcementId: Long)
 
 GET         /newInstructor                   controllers.UserController.showCreateInstructorPage()
 POST        /newInstructor                   controllers.UserController.createInstructor()
@@ -26,7 +32,6 @@ GET         /editInstructor/:username        controllers.UserController.showEdit
 POST        /editInstructor/:username        controllers.UserController.modifyInstructor(username: String)
 GET         /editStudent/:username           controllers.UserController.showEditStudentPage(username: String)
 POST        /editStudent/:username           controllers.UserController.modifyStudent(username: String)
-GET         /test         					 controllers.UserController.test()
 
 GET         /createQuestion                  controllers.QuestionController.showCreateQuestionPage()
 

@@ -44,6 +44,11 @@ public class Module extends Model {
 			
 			return type;
 		}
+
+
+//		public static String toString(Type type) {
+//			return type.toString();
+//		}
 	}
 	
 	/********************************
@@ -213,6 +218,14 @@ public class Module extends Model {
 	}
 	
 	
+	
+//	public static List<String> getAllModuleTypes() {
+//		List<String> typeStrings = new ArrayList<>();
+//		for (Type type : Type.values()) {
+//			typeStrings.add(type.toString());
+//		}
+//		return typeStrings;
+//	}
 	
 	
 	////////////////////////////////////////////

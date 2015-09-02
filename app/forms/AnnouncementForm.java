@@ -1,7 +1,6 @@
 package forms;
 
 public class AnnouncementForm {
-
 	public String msg;
 
 	public AnnouncementForm() {}

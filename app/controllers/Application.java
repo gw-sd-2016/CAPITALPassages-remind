@@ -4,6 +4,7 @@ import forms.LoginForm;
 import models.Course;
 import models.Institution;
 import models.User;
+import play.Routes;
 import play.mvc.*;
 
 import static play.data.Form.*;
@@ -66,5 +67,23 @@ public class Application extends Controller {
 			session("institutionName", user.institution.name);
 			return redirect((returnUrl.equals("none")) ? "/" : returnUrl);
 		}
+	}
+
+
+
+
+
+
+
+
+	public static Result javascriptRoutes() {
+		response().setContentType("text/javascript");
+		return ok(
+				Routes.javascriptRouter("jsRoutes",
+						routes.javascript.MessageController.delete(),
+						routes.javascript.MessageController.modifyAnnouncement(),
+						routes.javascript.MessageController.createAnnouncement()
+				)
+		);
 	}
 }

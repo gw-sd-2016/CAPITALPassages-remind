@@ -1,202 +1,301 @@
+<!DOCTYPE HTML>
+<html class="no-js" lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Create Module</title>
 
-@main("Index") {
-	<html class="no-js" lang="en">
-		<head>
-			<meta charset="utf-8" />
-			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-			<title>Create Module</title>
+		<link rel="stylesheet" href='@routes.Assets.versioned("css/foundation.css")'/>
+		<link rel="stylesheet" href='@routes.Assets.versioned("css/remind-style.css")'>
+		<script src='@routes.Assets.versioned("js/vendor/modernizr.js")'></script>
+		<script src='@routes.Assets.versioned("js/vendor/jquery.js")'></script>
+		<script src='@routes.Assets.versioned("js/foundation.min.js")'></script>
+		<script src='@routes.Assets.versioned("jquery-ui-1.11.4.custom/jquery-ui.min.js")'></script>
+		<link rel="stylesheet" href='@routes.Assets.versioned("jquery-ui-1.11.4.custom/jquery-ui.css")' />
 
-			<script src='@routes.Assets.versioned("tag-it-master/js/tag-it.js")'></script>
-			<link rel="stylesheet" href='@routes.Assets.versioned("tag-it-master/css/jquery.tagit.css")'/>
-		</head>
-		<body>
-			<div class="row">
-				<div class="large-12 medium-12 small-12">
-					<h1>Create Mathematics 101</h1>
-				</div>
-			</div>
-			<div class="row">
-				<a id="add-question-btn" class="button semiround" data-reveal-id="myModal">Add a Question</a>
-			</div>
+		<script src='@routes.Assets.versioned("tag-it-master/js/tag-it.js")'></script>
+		<link rel="stylesheet" href='@routes.Assets.versioned("tag-it-master/css/jquery.tagit.css")'/>
 
-			
-			<div class="row">
-				<ul id="accordion" class="accordion" data-accordion>
+	</head>
+	<body>
+			<!-- this button is used to forcibly attach an on click listener to dropdown buttons-->
+		<button data-dropdown="question-type-drop" style="display:none"></button>
 
-					<li class="accordion-navigation" hidden="true">
-						<a href="#panel">Which Class has the Highest Wavelength?</a>
-						<div id="panel" class="content">
-							<button href="#" data-dropdown="question-type-drop" class="button dropdown semiround">Question Type</button>
-							<ul id="question-type-drop" data-dropdown-content class="f-dropdown semiround" aria-hidden="true">
-								<li><a href="#">Multiple Choice</a></li>
-								<li><a href="#">Free Response</a></li>
-								<li><a href="#">Fill in The Blank</a></li>
-								<li><a href="#">Matching</a></li>
-							</ul>
-						</div>
-					</li>
+		<div id="change-question-type-modal" class="reveal-modal" data-reveal aria-labelledby="change-question-type-modal-title" aria-hidden="true" role="dialog">
+			<h2 id="change-question-type-modal-title">Warning</h2>
+			<p>If you change the question type, some of your current question data will be deleted</p>
+			<a class="close-reveal-modal" aria-label="Close">&#215;</a>
+		</div>
 
+		<div id="delete-modal" class="reveal-modal tiny" data-reveal aria-labelledby="delete-modal-title" aria-hidden="true" role="dialog">
+			<h3 id="delete-modal-title">Are you sure you want to delete this question?</h3>
+			<ul class="inline-list">
+				<li><a class="delete-delete-modal button alert semiround">Delete</a></li>
+				<li><a class="cancel-delete-modal button semiround">Cancel</a></li>
+			</ul>
+		</div>
+
+		<nav class="top-bar" data-topbar role="navigation">
+			<ul class="title-area">
+				<li class="name">
+					<h1><a href="#">Remind</a></h1>
+				</li>
+			</ul>
+			<section class="top-bar-section">
+				<ul class="right">
+					<li><a href="#">Manage Courses</a></li>
+					<li><a href="#">My Courses</a></li>
+					<li><a href="#">Manage Instructors</a></li>
+					<li><a href="#">Manage Students</a></li>
+					<li><a href="#">Me</a></li>
 				</ul>
+			</section>
+		</nav>
+		<div class="row">
+			<div class="large-12 medium-12 small-12">
+				<h1>Create Mathematics 101</h1>
 			</div>
-			<br><br>
+		</div>
+		<div class="row">
+			<a id="add-question-btn" class="button semiround" data-reveal-id="newQuestionModal">Add a Question</a>
+		</div>
+		<div class="row">
+				<!--accordian elements are attached to this ul as li's for each question-->
+			<ul id="accordion" class="accordion" data-accordion>
+            </ul>
+		</div>
+		<br><br>
 
-			<div class='reveal-modal' id='myModal' data-reveal>
-			
-			</div>
-			
-			
-			<script>
-            $(document).foundation();
+
+		<div id="newQuestionModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+			<h2 id="modalTitle">Awesome. I have it.</h2>
+			<p class="lead">Your couch.  It is mine.</p>
+			<p>I'm a cool paragraph that lives inside of an even cooler modal. Wins!</p>
+			<a class="close-reveal-modal" aria-label="Close">&#215;</a>
+		</div>
+
+
+
+		<script>
             
+            /* IMPORTANT ORGANIZATIONAL NOTES:
+                The Basic division of this page is based on the accordion navigation li's to add new question.
+                Each of these li's have a div with an id of panel + someCount.
+                In general the way listeners work is by figuring out which panel they are in 
+                by ascending up the tree until they find an id which starts with panel.
+                They can then use this panel to locate other elements by class using the find method.
+                mc means multiple choice, ftb means fill in the blank, match is matching (duh) check is checkbox (duh)
+                and free response questions are fr.
+            */
+
+            $(document).foundation();
+            //Gets the id by looking for the last '- ' and then taking the rest of the string
             var getQuestionNumber = function(panel){
                 panelId = panel.attr("id");
                 return String(panelId.substring(panelId.indexOf('-')+1));
             }
             
+            //Goes upwards in the HTML tree until it finds an element with an id which stars with panel
             var getPanel = function(element){
                 return element.closest("[id^='panel']");
             }
 
+            //gets the panel header by finding the first element inside the panel
             var getPanelHeader = function (panel){
                 return panel.parent().children().first();
             }
 
-            var count = 0; //count which is used to mark question number
+            var count = 0; //count which is used to autoincrement id's
+            var hasWarned = false; //used to warn you if you are going to delete your data when you change the question, resets each time you make a question
 
             // code to create a new question by adding to the accordion
-            $("#add-question-btn").click(function(){ 
+
+
+
+            $("#add-question-btn").click(function(){
                 count++;
+                hasWarned=false;
                 //attach a question to the accordion
-                $("#myModal").append(
-                    $("<li>", {"class":"accordion-navigation"}).append(
-                        $("<a>", {
-                            "href": "#panel-" + count,
-                            "text": "New Question | Question Type"
-                            }),
+                $("#newQuestionModal").html(
+                    //each "tab is stores as an li with the accordian navigation class"
                         $("<div>", {
                             "id": "panel-" + count,
                             "class": "content"
-                            }).append(
-                            $("<h4>",{"text":"Prompt:"}),
-                            $("<textarea value='hello'>", {"class": "prompt"}),
-                            //this handles the question type dropdown menu
-                            $("<button>",{
-                                "data-dropdown": "question-type-drop-" + count,
-                                "class": "button dropdown semiround",
-                                "text": "Question Type",
-                                "id": "data-dropdown-button-" + count
-                                }),
-                            $("<ul>", {
-                                "data-dropdown-content": true,
-                                "id": "question-type-drop-" + count,
-                                "class": "f-dropdown semiround",
-                                "aria-hidden": true,
-                                }).append(
-                                $("<li>").append(
-                                    $("<a>", {
-                                        "href": "#",
-                                        "text": "Multiple Choice",
-                                        "class": "question-type-option"
-                                        })),
-                                $("<li>").append(
-                                    $("<a>", {
-                                        "href": "#",
-                                        "text": "Free Response",
-                                        "class": "question-type-option"
-                                        })),
-                                $("<li>").append(
-                                    $("<a>", {
-                                        "href": "#",
-                                        "text": "Fill in the Blank",
-                                        "class": "question-type-option"
-                                        })),
-                                $("<li>").append(
-                                    $("<a>", {
-                                        "href": "#",
-                                        "text": "Matching",
-                                        "class": "question-type-option"
-                                        }
-                                    )
-                                )                                
-                            ),
-                            $("<div>", {
-                                "class": "question-div"
-                            }),
-                            $("<h4>", {"text":"Tags:"}),
-                            $("<ul>", {
-                                "id": "myTags-" + count
-                            })
-                        )
-                    )
+                            }).append("" +
+                             "<table  width='80%'>" +
+                              	"<tr>" +
+                              		"<td>Content</td>" +
+                               		"<td><button class='content button semiround' style='margin:0'>Add Content</button></td>" +
+                              	"</tr>" +
+                              	"<tr>" +
+                              		"<td>Prompt</td>" +
+                               		"<td><textarea class='prompt'></textarea></td>" +
+                              	"</tr>" +
+                             "</table>" +
+                             "<table width='80%'>" +
+                              	"<tr>" +
+                               		"<td><button class='content button dropdown semiround' data-dropdown='question-type-drop-"+count+"' style='margin:0'>Free Response</button></td>" +
+                              	"</tr>" +
+                              	"<tr>" +
+                               		"<td>" +
+                               			"<ul data-dropdown-content='true' id='question-type-drop-"+count+"' class='f-dropdown semiround' aria-hidden='true'>" +
+                               		"</td>" +
+                              	"</tr>" +
+
+                              	"<tr>" +
+									"<div class='question-div'>" +
+										"<td>Answer</td>" +
+										"<td><textarea class='fr-answer-textbox'></textarea></td>" +
+									"</div>" +
+								"</tr>" +
+
+                             "</table>" +
+
+                             "<table width='80%'>" +
+                             	"<tr>" +
+									"<td>Tags</td>" +
+									"<td><ul id='myTags-"+count+"' style='margin-bottom:0px'></td>" +
+								"</tr>" +
+                             "</table>"
+
+                             ));
+
+			   $("#question-type-drop-"+count).append(
+					$("<li>").append(
+						$("<a>", {
+							"text": "Free Response",
+							"class": "question-type-option"
+							})),
+					$("<li>").append(
+						$("<a>", {
+							"text": "Multiple Choice",
+							"class": "question-type-option"
+							})),
+					$("<li>").append(
+						$("<a>", {
+							"text": "Fill in the Blank",
+							"class": "question-type-option"
+							})),
+					$("<li>").append(
+						$("<a>", {
+							"text": "Matching",
+							"class": "question-type-option"
+							}
+						)
+					)
                 );
-                //tags are created by putting a ul in the html code with an id and then calling the following tagit code with a corresponding id 
+                //tags are created by putting a ul in the html code with an id and then calling the following tagit code with a corresponding id
                 $("#myTags-" + count).tagit({
                     placeholderText: "Add a Tag",
                     caseSensitive: false
                 });
             });
+            
+            //alerts you if you are about to delete your question data
+            $(document).on("click", ".question-type-button", function(){
+                var panel = getPanel($(this));
+                var shouldWarn = false;
+                if(!hasWarned){
+                    switch($(this).text()){
 
+                        //if there isn't nothing in the answer textbox
+                        case "Free Response":
+                            if(String(panel.find(".fr-answer-textbox").val())!=""){
+                                shouldWarn=true;}
+                            break;
+
+                        //if theres isn't nothing in mc rad group
+                        case "Multiple Choice":
+                            if(panel.find(".mc-rad-group").html()!=""){
+                                shouldWarn=true;}
+                            break;
+
+                        //if theres isn't nothing in the original textarea for the ftb question
+                        case "Fill in the Blank":
+                            if(panel.find(".ftb-textarea").val()!=""){
+                                shouldWarn=true;}
+                            break;
+
+                        //if there isn't nothing in the question div or if the number of input elements in the distract div is not equal to zero 
+                        case "Matching":
+                            if(panel.find(".match-question-div").html()!=""||panel.find(".match-distract-div").has("input").size()!=0){
+                                shouldWarn=true;}
+                            break;
+                    }
+                }
+                
+                if(shouldWarn){
+                    hasWarned=true;
+                    $('#change-question-type-modal').foundation('reveal','open');
+                }
+            });
+
+            //Changes text in header when the prompt textbox loses focus
+            $("#accordion").on("blur", ".prompt", function(){
+                var panel = getPanel($(this));
+                var panelHeader = getPanelHeader(panel);
+                panelHeader.find("h5").text($(this).val());
+                $(this).val(""); 
+            });
             //checks when the dropdown is clicked by looking for li elements which are descendents of the content class
-            $("#myModal").on("click", ".question-type-option", function(){
+            $(document).on("click", ".question-type-option", function(){
                 var questionType = $(this).text(); //gets the text from the li that was clicked
                 var dropdownButton =  $(this).parent().parent().prev();
                 if(dropdownButton.text()!=questionType){ //changes the dropdown buttons text to the li's text
                     dropdownButton.text(questionType);
                     var panel = getPanel($(this)); //gets the panel
                     var panelHeader = getPanelHeader(panel);
-                    var panelHeaderText = panelHeader.text();
-                    panelHeader.text(panelHeaderText.substring(0, panelHeaderText.indexOf('|')+2)+questionType); 
-                    
+                    panelHeader.find("label").text($(this).text());
                     var questionDiv = panel.children(".question-div");
                     questionDiv.html("");
                     //This switch determines the question type based on the dropdown that was clicked
                     switch(questionType){ 
+                        case "Free Response":
+                            questionDiv.append($("<h6>", {
+                                "text":"Answer"}),
+                            $("<textarea>", {"class": "fr-answer-textbox"}),
+                            $("<br>"));
+                            break;
+                        
                         case "Multiple Choice":
                             questionDiv.append(
                                 $("<p>", {"text": "Choices"}),
-                                $("<div>", {"class":"mc-rad-group"}),
-                                $("<input>", {
+                                $("<div>", {"class":"mc-rad-group"}), //The mc choices will be added here
+                                $("<input>", { //The method pulls from this box to add mc choices
                                     "type": "text",
                                     "class": "mc-add-question-input",
                                     "placeholder": "New Choice"
                                 }),
                                 $("<div>", {"class": "text-center"}).append(
                                     $("<a>", {                                    
-                                        "class": "button success semiround mc-button",
+                                        "class": "button success semiround small mc-button",
                                         "text": "Add Choice"
                                     })
                                 )
                             )
                             break;
 
-                        case "Free Response":
-                            questionDiv.append($("<h6>", {
-                                "text":"Answer"}),
-                            $("<textarea>"),
-                            $("<br>"));
-                            break;
-
                         case "Fill in the Blank":
                             questionDiv.append(
+                                //this div is originally shown to allow the user to input the content
                                 $("<div>",{"class": "ftb-div-1"}).append(
                                     $("<h6>", {"text": "Content:"}),
-                                    //add something to this text area?
                                     $("<textarea>", {"class":"ftb-textarea"}),
                                     $("<div>", {"class": "text-center"}).append(
-                                        //something to identify this?
                                         $("<a>", {
                                             "class": "ftb-submit-content-button button semiround",
                                             "text": "Submit Text Content"
                                     }))),
+                                //this div will be shown after the user has submitted the content
                                 $("<div>",{"class": "ftb-div-2"}).append(
                                     $("<div>", {"class": "row"}).append(
                                         $("<div>", {"class":"small-8 medium-6 large-8 columns"}).append(
-                                            $("<div>", {"class":"ftb-text panel callout semiround"})),
+                                            $("<div>", {"class":"ftb-text panel callout semiround"})), //this is where the text from the inputted content will be
                                             $("<a>", {
-                                                "class":"ftb-clear-button button semiround alert",
+                                                "class":"ftb-clear-button button semiround alert small",
                                                 "text":"clear"
                                             })),
-                                    $("<div>", {"class": "ftb-content-div"})
+                                    $("<div>", {"class": "ftb-content-div"}) //The questions will be attached to this div
                                     ).hide());
                             break;
 
@@ -209,11 +308,12 @@
                                         $("<h4>", {"text": "Options"}))
                                     ),
                                 $("<div>", {"class": "row"}).append(
-                                    $("<div>", {"class": "match-question-div"})),
+                                    $("<div>", {"class": "match-question-div"})), //matching questions will be appended here
                                 $("<div>", {"class": "row"}).append(
+                                    //distractors will be appended here
                                     $("<div>", {"class": "match-distract-div small-6 medium-6 large-6 columns right"}).append(
-                                        $("<h6>", {"text" : "Distractors"})
-                                        )), //this is to fill up space
+                                        $("<h6>", {"text" : "Distractors"}) 
+                                        )), 
                                 $("<div>", {"class": "row"}).append(
                                     $("<div>", {"class": "small-6 medium-6 large-6 columns"}).append(
                                         $("<a>", {
@@ -229,31 +329,69 @@
                     }
                 }
             });
+
+            //testin it son
+            $(".mc-add-question-input").keypress(function(e) {
+                console.log("Key pressed");
+                //on enter key pressed
+                if (e.keyCode == 13 && !($(this).hasClass('classTest')) ) {
+                       var panel = getPanel($(':focus'));
+                       var n = $('.text-box').length + 1;
+                        if( 5 < n ) {
+                            alert('Stop it!');
+                            return false;
+                        }
+                        var box_html = $('<p class="text-box"><label for="box' + n + '">Box <span class="box-number">' + n + '</span></label> <input type="text" name="boxes[]" value="" id="box' + n + '" /> <a href="#" class="remove-box">Remove</a></p>');
+                        box_html.hide();
+                        panel.find(".mc-rad-group").append(box_html);
+//                        $('.mc-rad-group').after(box_html);
+                        box_html.fadeIn('slow');
+                        return false;
+                }
+            });
+
+            $('.my-form').on('click', '.remove-box', function(){
+                $(this).parent().css( 'background-color', '#FF6C6C' );
+                $(this).parent().fadeOut("slow", function() {
+                    $(this).remove();
+                    $('.box-number').each(function(index){
+                        $(this).text( index + 1 );
+                    });
+                });
+                return false;
+            });
+
             
             //Mutiple Choice Questions
-            $("#myModal").on("click", ".mc-button", function(){
+            $(document).on("click", ".mc-button", function(){
+            console.log($(this));
                 var panel = getPanel($(this));
                 var questionNumber = getQuestionNumber(panel);
                 var radGroup = panel.find(".mc-rad-group");
                 var addQuestionInput = panel.find(".mc-add-question-input");
                 radGroup.append(
-                    $("<input>",{
-                        "type": "radio",
-                        "name": "mc-rad-group-" + questionNumber,
-                        "checked" : radGroup.html()==""
-                    }),
+                    $("<div>").append(
+                        $("<input>",{
+                            "type": "radio",
+                            "name": "mc-rad-group-" + questionNumber,
+                            "checked" : radGroup.html()=="" //if the rad group doesnt have any html(it's empty) the radio is check, so first radio is checked
+                        }),
 
-                    $("<label>", {"text": addQuestionInput.val()}),
-                    $("<a>", {
-                        "class":"button tiny alert semiround",
-                        "text":"Delete"}),
-                    $("<br>")
-                )
-                addQuestionInput.val("");
+                        $("<label>", {"text": addQuestionInput.val()}), //This label is the actual thing which contains the mc choice text
+                        $("<a>", {
+                            "class":"mc-delete-button button tiny alert semiround",
+                            "text":"Delete"}),
+                        $("<br>")
+                ));
+                addQuestionInput.val(""); //reset the input field when we add an mc option
+            });
+            $(document).on("click", ".mc-delete-button", function(){
+            //gets surrounding div and deletes it
+            $(this).parent().remove();
             });
             
             //Matching Questions
-            $("#myModal").on("click", ".match-question-button", function(){
+            $(document).on("click", ".match-question-button", function(){
                 var panel = getPanel($(this));
                 var matchQuestionDiv = panel.find(".match-question-div");
                 matchQuestionDiv.append(
@@ -274,7 +412,7 @@
                     ))
             });
 
-            $("#myModal").on("click", ".match-distract-button", function(){
+            $(document).on("click", ".match-distract-button", function(){
                 var panel = getPanel($(this));
                 var matchDistractDiv = panel.find(".match-distract-div");
                 matchDistractDiv.append(
@@ -284,68 +422,176 @@
             });
             
             //Fill in the Blank Questions
-            $("#myModal").on("click", ".ftb-submit-content-button", function(){
+            $(document).on("click", ".ftb-submit-content-button", function(){
                 var panel = getPanel($(this));
                 var div1 = panel.find(".ftb-div-1");
                 var div2 = panel.find(".ftb-div-2");
                 div1.hide();
+                //Copies content from ftb-textarea into ftb-text
                 panel.find(".ftb-text").text(panel.find(".ftb-textarea").val());
                 panel.find(".ftb-text").each(function() {
+                    /* Essentially this takes the text from ftb-text and then converts each word into a span
+                    yay regex... so basically any combination of letters or numbers or aprostrophes 
+                    will be accepted the $1 means that it wants the first thing 
+                    which is saved. (Things are saved by putting them in parentheses). */
                     $(this).html($(this).text().replace(/([A-Za-z0-9\'’]+)/g, "<span>$1</span>"));
                 });
                 div2.show();
             });
             //Why doesnt this work?: $("accordion").on("click", "span", function(){
+            //So when we click on one of those magic regex created spans this method is called
             $(document).on("click", ".ftb-text span", function(){
                 count++;
                 var panel = getPanel($(this));
                 var contentDiv = panel.find(".ftb-content-div"); 
+                /*We check if the span has the class "info" if so we do nothing, if it doesnt then
+                we add some classes to make it prettier */
                 if(!$(this).hasClass('info')){
+                    $(this).attr("id", "ftb-span-"+count)
                     $(this).addClass('info label semiround');
                     contentDiv.append(
-                        $("<div>", {"class":"row"}).append(
+                        $("<div>", {
+                            "class":"row",
+                            "id":"ftb-main-div-" + count
+                        }).append(
                             $("<h4>", {"text": $(this).text()}),
                             $("<h6>", {"text":"Distractors"}),
-                            $("<div>", {"class": "small-12 medium-12 large-12 columns"}).append(
+                            //this code is to append a new question  the count is used to keep track of the different words
+                            $("<div>", {
+                                "class": "small-12 medium-12 large-12 columns"
+                            }).append(
                                 $("<div>", {"class": "row"}).append(
                                     $("<div>", {"id": "ftb-question-div-" + count, "class":"small-12 medium-12 large-12 columns"})),
                                 $("<a>", {
                                     "id": "ftb-distractor-button-" + count,
-                                    "class":"button semiround" , //change to ftbcount?
+                                    "class":"button semiround" , 
                                     "text":"Add a Distractor"
+                                }),
+                                $("<a>", {
+                                    "id": "ftb-delete-button-" + count,
+                                    "class":"button semiround alert", 
+                                    "text":"Delete"
                                 }))));
                 }
             });
 
-            $("#myModal").on("click", "[id^='ftb-distractor-button-']", function(){
+            //this code appends a new distractor to a specific word when the button is clicked
+            $(document).on("click", "[id^='ftb-distractor-button-']", function(){ 
                 var panel = getPanel($(this));
                 var id = this.id;
-                questionNumber = id.substring(id.lastIndexOf('-')+1);
+                var questionNumber = id.substring(id.lastIndexOf('-')+1); //this is really counnt?
                 questionDiv = panel.find("#ftb-question-div-" + questionNumber);
                 questionDiv.append($("<input>", {
                     "type":"text"
                 }));
             });
 
-            $("#myModal").on("click", ".ftb-clear-button", function(){
+            //this code appends a new distractor to a specific word when the button is clicked
+            $(document).on("click", "[id^='ftb-delete-button-']", function(){ 
+                var panel = getPanel($(this));
+                var id = this.id;
+                var questionNumber = id.substring(id.lastIndexOf('-')+1); //this is really count?
+                panel.find("#ftb-main-div-"+ questionNumber).remove()
+                panel.find("#ftb-span-" + questionNumber).removeClass();
+
+            });
+
+            //this basically resets the ftb question
+            $(document).on("click", ".ftb-clear-button", function(){
                 var panel = getPanel($(this));
                 var div1 = panel.find(".ftb-div-1");
                 var div2 = panel.find(".ftb-div-2");
                 var contentDiv = panel.find(".ftb-content-div");
-                contentDiv.html("");
-                div2.hide();
+                contentDiv.html(""); //We're removing any questions that we made
+                div2.hide(); // Here we swap the 2 div's
                 div1.show();
             });
+            
+            
+            $(document).on("click", ".cb-delete-button", function(){
+			    //gets surrounding div and deletes it
+			    $(this).parent().remove();
+			});
+			
+			
+			
+			//alerts you if you are about to delete your question data
+			$("#accordion").on("click", ".question-type-button", function(){
+			    var panel = getPanel($(this));
+			    var shouldWarn = false;
+			    if(!hasWarned){
+			        switch($(this).text()){
+			
+			            //if there isn't nothing in the answer textbox
+			            case "Free Response":
+			                if(String(panel.find(".fr-answer-textbox").val())!=""){
+			                    shouldWarn=true;}
+			                break;
+			
+			            //if theres isn't nothing in mc rad group
+			            case "Multiple Choice":
+			                if(panel.find(".mc-rad-group").html()!=""){
+			                    shouldWarn=true;}
+			                break;
+			
+			            //if theres isn't nothing in the original textarea for the ftb question
+			            case "Fill in the Blank":
+			                if(panel.find(".ftb-textarea").val()!=""){
+			                    shouldWarn=true;}
+			                break;
+			
+			            //if there isn't nothing in the question div or if the number of input elements in the distract div is not equal to zero 
+			            case "Matching":
+			                if(panel.find(".match-question-div").html()!=""||panel.find(".match-distract-div").has("input").size()!=0){
+			                    shouldWarn=true;}
+			                break;
+			                        //if there isn't nothing in the question div or if the number of input elements in the distract div is not equal to zero 
+			            case "Checkbox":
+			                if(panel.find(".cb-check-group").html()!=""){
+			                    shouldWarn=true;}
+			                break;
+			        }
+			    }
+			    
+			    if(shouldWarn){
+			        hasWarned=true;
+			        $('#change-question-type-modal').foundation('reveal','open');
+			    }
+			});
+			
+			
+			
+			//Changes text in header when the prompt textbox loses focus
+			$("#accordion").on("blur", ".prompt", function(){
+			    var panel = getPanel($(this));
+			    var panelHeader = getPanelHeader(panel);
+			    panelHeader.find("h5").text($(this).val());
+			});
+			
+			var questionDeletePanel;
+			//cancels the deletion of a question
+			$('a.cancel-delete-modal').on('click', function() {
+			    $(this).foundation('reveal', 'close');
+			});
+			
+			//confirms the deletion of a questison
+			$('a.delete-delete-modal').on('click', function() {
+			    var panel = questionDeletePanel;
+			    panel.parent().nextAll().each(function(){
+			        questionNumberSpan = $(this).first().find(".question-number-span");
+			        questionNumberSpan.text(parseInt(questionNumberSpan.text())-1)
+			    });
+			    panel.parent().remove(); 
+			    $(this).foundation('reveal', 'close');
+			});
+			
+			//code to remove a question
+			$("#accordion").on("click", ".delete-question-btn", function(){
+			    questionDeletePanel = getPanel($(this));
+			    $('#delete-modal').foundation('reveal','open');
+			});
 
-            //Changes text in header when the prompt textbox loses focus
-            $("#myModal").on("blur", ".prompt", function(){
-                var panel = getPanel($(this));
-                var panelHeader = getPanelHeader(panel);
-                var panelHeaderText = panelHeader.text();
-                panelHeader.text($(this).val() + panelHeaderText.substring(panelHeaderText.indexOf('|')-1)); 
-            });
         </script>
-		</body>
-	</html>
-	}	
+	</body>
+</html>
 }
