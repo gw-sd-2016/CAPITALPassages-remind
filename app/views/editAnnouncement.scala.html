@@ -1,0 +1,70 @@
+@(form: Form[forms.AnnouncementForm], announcement: Message)
+@main("Index", false) {
+
+	@helper.form(routes.MessageController.modifyAnnouncement(announcement.id)) {
+
+		<style type="text/css">
+		html {
+		overflow : hidden ;
+		}
+		</style>
+
+		<html class="no-js" lang="en">
+			<head>
+				<meta charset="utf-8" />
+				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+				<title>Edit Announcement</title>
+
+		<body>
+			<div class="row">
+				<div class="large-12 medium-12 small-12">
+					<h1>Editing Announcement</h1>
+					<br>
+				</div>
+			</div>
+			@if(form.hasGlobalErrors) {
+				<div data-alert class="alert alert-box">
+				@form.globalError.message
+				</div>
+			}
+			@if(flash.containsKey("success")) {
+				<div data-alert class="alert-box">
+					@flash.get("success")
+				</div>
+			} else {
+				<div class="row">
+					<form id="announcementForm" method="post" enctype="multipart/form-data">
+						<div class="large-4 medium-4 small-4 small-centered columns">
+							<h5>Message</h5>
+							<textarea name="msg" value="@form("msg").value"></textarea>
+
+							<div class="text-center">
+								<button id="submit" type="submit" class="button success semiround">Submit</button>
+							</div>
+							
+							<script>
+								$("#submit").on("click", function() {
+									jsRoutes.controllers.MessageController.modifyAnnouncement(@announcement.id).ajax({
+									    data : $("form").serialize(),
+									    success : function(data) {
+									        parent.window.location.reload();
+									        console.log($("form").serialize());
+									        console.log("YAY");
+									    },
+									    error : function(err) {
+									    	console.log("error = " + $("form").serialize());
+									        console.log(err);
+									    }
+									});
+								});
+							</script>
+						</div>
+					</form>
+
+				</div>
+			}
+
+		</body>
+
+	}
+}
