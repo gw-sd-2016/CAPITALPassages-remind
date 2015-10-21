@@ -35,6 +35,9 @@ POST        /editStudent/:username           controllers.UserController.modifySt
 
 GET         /createQuestion                  controllers.QuestionController.showCreateQuestionPage()
 
+GET         /test                            @controllers.Application.showAdminTestPage()
+GET         /testprofile                     @controllers.Application.showAdminProfileTestPage()
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                    controllers.Assets.versioned(path="/public", file: Asset)

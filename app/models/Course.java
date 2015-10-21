@@ -173,7 +173,7 @@ public class Course extends Model {
 	}
 
 
-	//Get getAll Courses for a student
+	//Get all Courses for a student
 	public static List<Course> getAllCoursesForStudent(Long studentId) {
 		return find
 				.where()
@@ -183,7 +183,7 @@ public class Course extends Model {
 	}
 
 
-	//Get getAll Courses at an Institution
+	//Get all Courses at an Institution
 	public static List<Course> getAllCoursesForInstitution(Long institutionId) {
 		String sql = "select * from course " +
 					 "where instructor_id in " +

@@ -73,10 +73,23 @@ public class Application extends Controller {
 
 
 
+    public Result showAdminTestPage() {
+        return ok(admin.render());
+    }
+
+    public Result showAdminProfileTestPage() {
+        return ok(adminprofile.render());
+    }
 
 
 
-	public static Result javascriptRoutes() {
+
+
+
+
+
+
+    public static Result javascriptRoutes() {
 		response().setContentType("text/javascript");
 		return ok(
 				Routes.javascriptRouter("jsRoutes",

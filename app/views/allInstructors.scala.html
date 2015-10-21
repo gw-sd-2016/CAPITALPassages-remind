@@ -1,52 +1,60 @@
 @(institution: Institution)
 @main(institution.name + ": All Students", true) {
 
-<div class="row">
-    <div class="large-12 medium-12 small-12 columns">
-        <h1>Instructors</h1>
-        <h4>@institution.name</h4>
-    </div>
-</div>
-<div class="row">
-    <div class="large-4 medium-4 small-4 columns">
-        <input type="text" placeholder="Search for the User">
-    </div>
-</div>
-<div class="row">
-    <div class="large-9 medium-4 small-4 columns">
-        <a href="@routes.UserController.showCreateInstructorPage()" class="button semiround">Register a new Instructor</a>
-    </div>
-</div>
-<div class="row">
-    <div class="large-12 medium-12 small-12 columns">
-        <div class="panel">
-            <table>
-                <thead>
-                <tr>
-                    <th width="300">Instructor Name</th>
-                    <th width="300">Username</th>
-                    <th width="240">Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                    @for(instructor <- User.getAllInstructorsForInstitution(institution.id)) {
-                        <tr>
-                            <td><a href="@routes.UserController.showInstructorProfilePage(instructor.username)">@instructor.firstName @instructor.lastName</a></td>
-                            <td>@instructor.username</td>
-                            <td><a href="@routes.UserController.showEditInstructorPage(instructor.username)" class="button semiround">Edit</a>
-                                <a href="#" class="button alert semiround">Delete</a>
-                            </td>
-                        </tr>
-                    }
-                
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-<script src="js/vendor/jquery.js"></script>
-<script src="js/foundation.min.js"></script>
-<script>
+	<div class="large-10 medium-12 small-12 columns light-grey-bg-pattern">
+
+		<div id="dashboard">
+
+			<div class="row">
+				<div class="large-12 medium-12 small-12 columns">
+					<h1>Instructors</h1>
+					<h4>@institution.name</h4>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="large-9 medium-4 small-4 columns">
+					<a href="@routes.UserController.showCreateInstructorPage()" class="button small radius">Register a new Instructor</a>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="large-12 medium-12 small-12 columns">
+					<div class="custom-panel-body">
+						
+						<div class="row">
+							<div class="large-4 medium-4 small-4 columns">
+								<input type="text" placeholder="Search for the User">
+							</div>
+						</div>
+						
+						<table>
+							<thead>
+								<tr>
+									<th width="300">Instructor Name</th>
+									<th width="300">Username</th>
+									<th width="240">Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+							@for(instructor <- User.getAllInstructorsForInstitution(institution.id)) {
+								<tr>
+									<td><a href="@routes.UserController.showInstructorProfilePage(instructor.username)">@instructor.firstName @instructor.lastName</a></td>
+									<td>@instructor.username</td>
+									<td><a href="@routes.UserController.showEditInstructorPage(instructor.username)" class="button radius">Edit</a>
+										<a href="#" class="button alert radius">Delete</a>
+									</td>
+								</tr>
+							}
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<script src="js/vendor/jquery.js"></script>
+			<script src="js/foundation.min.js"></script>
+			<script>
     $(document).foundation();
 </script>
 

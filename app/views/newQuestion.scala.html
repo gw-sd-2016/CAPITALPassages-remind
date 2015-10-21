@@ -17,6 +17,30 @@
 		<link rel="stylesheet" href='@routes.Assets.versioned("tag-it-master/css/jquery.tagit.css")'/>
 
 	</head>
+
+	<style type="text/css">
+	.dropdown.button.tiny, .button.dropdown.tiny, .button.tiny {
+	width:35px;
+	padding:5px 15px 5px 0px;
+	margin:0px 0px 0px 5px;
+	text-align:center;
+	}
+
+	.f-dropdown.tiny {
+	max-width:50px;
+	}
+
+	.dropdown.button.tiny:after, button.dropdown.tiny:after {
+	right:10%;
+	}
+
+	input[type="text"].answer-input, .answer-input {
+	background-color: #84F39A;
+	border-color: #51C067;
+	}
+	</style>
+
+
 	<body>
 			<!-- this button is used to forcibly attach an on click listener to dropdown buttons-->
 		<button data-dropdown="question-type-drop" style="display:none"></button>
@@ -112,17 +136,116 @@
 
 
 
+			/*
+			 * Removes all rows in the Answer table below the dropdown
+			 * and inserts an answer box
+			 */
+			function addAnswersToQuestionsRow() {
+				$("#answers-table").find("tr:gt(0)").remove();
+				$("#answers-table").append(
+					"<tr id='answers-row'>" +
+						"<td width='25%'>Answer</td>" +
+						"<td><input type='text' class='fr-answer-input answer-input' style='height:30px;margin:0px'></td>" +
+					"</tr>"
+				);
+			}
+
+
+			/*
+			 * Removes all rows in the Answer table below the dropdown
+			 * and inserts an answer box and 3 choice inputs (by default)
+			 */
+			function addAnswersToQuestionsRow2() {
+				$("#answers-table").find("tr:gt(0)").remove();
+				$("#answers-table").append(
+					"<tr id='distractors-row'>" +
+						"<td width='25%'>Choices " +
+							 "<button id='distractors-dropdown' class='button dropdown tiny semiround' data-dropdown='num-distractors-drop'>4</button>" +
+	                         "<ul data-dropdown-content='true' id='num-distractors-drop' class='f-dropdown tiny semiround' aria-autoclose='true'></td>" +
+                             "</ul>" +
+						 "</td>" +
+						 "<td width='1%'>" +
+						    "<input type='checkbox' checked>" +
+						 "</td>" +
+						 "<td>" +
+						    "<input type='text' class='input-distractor answer-input' style='height:30px;margin:0px'>" +
+						 "</td>" +
+					"</tr>"
+				);
+
+				var numDistractors = $("#distractors-dropdown").text();
+				insertDistractorInputs(numDistractors);
+
+				// number of choices must be at least 2 and no more than 5
+				for (var i=2; i<=5; i++) {
+					$("#num-distractors-drop").append(
+						"<li class='num-distractors-option'>"+i+"</li>"
+					);
+				}
+			}
+
+
+			$(document).on("click", ".num-distractors-option", function(){
+				var numDistractors = $(this).text();
+				insertDistractorInputs(numDistractors);
+
+				$("#distractors-dropdown").text(numDistractors);
+			});
+
+
+
+
+			/*
+			 * Insert the desired number of distractor textboxes into the table
+			 */
+			function insertDistractorInputs(numDistractors) {
+				$("#answers-table").find("tr:gt(1)").remove();
+
+				//for each one after the first, insert an empty cell and then the input box
+				for (var i=1; i<numDistractors; i++) {
+					$("#answers-table").append(
+						"<tr><td></td>" +
+						"<td width='1%'>" +
+						    "<input type='checkbox'>" +
+						 "</td>" +
+						"<td><input type='text' class='input-distractor' style='height:30px;margin:0px'></td></tr>"
+					);
+				}
+
+
+				// pressing enter inside an answer/distractor input box will jump to the next input box
+				$('.input-distractor').on('keyup', function(e) {
+				    if (e.which === 13) {
+			            var index = $('.input-distractor').index(this) + 1;
+			            $('.input-distractor').eq(index).focus();
+			        }
+				});
+			}
+
+
+
             $("#add-question-btn").click(function(){
                 count++;
                 hasWarned=false;
+                $("#newQuestionModal").css("top", "30px");
                 //attach a question to the accordion
+
+//
+//                $('<div/>', {
+//				    'id':'modal-title',
+//				    'class':'myClass',
+//				    'text':'Text Only',
+//				}).appendTo('#newQuestionModal');
+
+
                 $("#newQuestionModal").html(
                     //each "tab is stores as an li with the accordian navigation class"
                         $("<div>", {
                             "id": "panel-" + count,
                             "class": "content"
-                            }).append("" +
-                             "<table  width='80%'>" +
+                            }).append(
+                            "<h3>Materials</h3>" +
+                             "<table id='content-table' width='80%'>" +
                               	"<tr>" +
                               		"<td>Content</td>" +
                                		"<td><button class='content button semiround' style='margin:0'>Add Content</button></td>" +
@@ -132,58 +255,28 @@
                                		"<td><textarea class='prompt'></textarea></td>" +
                               	"</tr>" +
                              "</table>" +
-                             "<table width='80%'>" +
+                             "<h3>Answers</h3>" +
+                             "<table id='answers-table' width='80%'>" +
                               	"<tr>" +
-                               		"<td><button class='content button dropdown semiround' data-dropdown='question-type-drop-"+count+"' style='margin:0'>Free Response</button></td>" +
+                               		"<td colspan='2'><button id='dropdown-question-type' class='content button dropdown semiround' data-dropdown='question-type-drop' style='margin:0'>(Choose Question Type)</button>" +
+                              	        "<ul data-dropdown-content='true' id='question-type-drop' class='f-dropdown semiround'>" +
+                              	            "<li><a class='question-type-option'>Free Response</a></li>" +
+                              	            "<li><a class='question-type-option'>Multiple Choice</a></li>" +
+                              	            "<li><a class='question-type-option'>Fill in the Blank</a></li>" +
+                              	            "<li><a class='question-type-option'>Matching</a></li>" +
+                              	     "</td>" +
                               	"</tr>" +
-                              	"<tr>" +
-                               		"<td>" +
-                               			"<ul data-dropdown-content='true' id='question-type-drop-"+count+"' class='f-dropdown semiround' aria-hidden='true'>" +
-                               		"</td>" +
-                              	"</tr>" +
-
-                              	"<tr>" +
-									"<div class='question-div'>" +
-										"<td>Answer</td>" +
-										"<td><textarea class='fr-answer-textbox'></textarea></td>" +
-									"</div>" +
-								"</tr>" +
-
                              "</table>" +
-
-                             "<table width='80%'>" +
+                             "<table id='tags-table' width='80%'>" +
                              	"<tr>" +
 									"<td>Tags</td>" +
-									"<td><ul id='myTags-"+count+"' style='margin-bottom:0px'></td>" +
+									"<td><ul id='myTags-"+count+"' style='margin:0px'></td>" +
 								"</tr>" +
                              "</table>"
 
                              ));
 
-			   $("#question-type-drop-"+count).append(
-					$("<li>").append(
-						$("<a>", {
-							"text": "Free Response",
-							"class": "question-type-option"
-							})),
-					$("<li>").append(
-						$("<a>", {
-							"text": "Multiple Choice",
-							"class": "question-type-option"
-							})),
-					$("<li>").append(
-						$("<a>", {
-							"text": "Fill in the Blank",
-							"class": "question-type-option"
-							})),
-					$("<li>").append(
-						$("<a>", {
-							"text": "Matching",
-							"class": "question-type-option"
-							}
-						)
-					)
-                );
+
                 //tags are created by putting a ul in the html code with an id and then calling the following tagit code with a corresponding id
                 $("#myTags-" + count).tagit({
                     placeholderText: "Add a Tag",
@@ -240,43 +333,26 @@
             //checks when the dropdown is clicked by looking for li elements which are descendents of the content class
             $(document).on("click", ".question-type-option", function(){
                 var questionType = $(this).text(); //gets the text from the li that was clicked
-                var dropdownButton =  $(this).parent().parent().prev();
+                var dropdownButton =  $("#dropdown-question-type");
                 if(dropdownButton.text()!=questionType){ //changes the dropdown buttons text to the li's text
                     dropdownButton.text(questionType);
                     var panel = getPanel($(this)); //gets the panel
                     var panelHeader = getPanelHeader(panel);
                     panelHeader.find("label").text($(this).text());
-                    var questionDiv = panel.children(".question-div");
+                    var questionDiv = $(".q-tr");
                     questionDiv.html("");
                     //This switch determines the question type based on the dropdown that was clicked
                     switch(questionType){ 
                         case "Free Response":
-                            questionDiv.append($("<h6>", {
-                                "text":"Answer"}),
-                            $("<textarea>", {"class": "fr-answer-textbox"}),
-                            $("<br>"));
+                        	addAnswersToQuestionsRow();
                             break;
                         
                         case "Multiple Choice":
-                            questionDiv.append(
-                                $("<p>", {"text": "Choices"}),
-                                $("<div>", {"class":"mc-rad-group"}), //The mc choices will be added here
-                                $("<input>", { //The method pulls from this box to add mc choices
-                                    "type": "text",
-                                    "class": "mc-add-question-input",
-                                    "placeholder": "New Choice"
-                                }),
-                                $("<div>", {"class": "text-center"}).append(
-                                    $("<a>", {                                    
-                                        "class": "button success semiround small mc-button",
-                                        "text": "Add Choice"
-                                    })
-                                )
-                            )
+                            addAnswersToQuestionsRow2();
                             break;
 
                         case "Fill in the Blank":
-                            questionDiv.append(
+                            $('#answers-table').append(
                                 //this div is originally shown to allow the user to input the content
                                 $("<div>",{"class": "ftb-div-1"}).append(
                                     $("<h6>", {"text": "Content:"}),
@@ -300,7 +376,7 @@
                             break;
 
                         case "Matching":
-                            questionDiv.append(
+                            $('#answers-table').append(
                                 $("<div>", {"class":"row"}).append(
                                     $("<div>", {"class":"small-6 medium-6 large-6 columns"}).append(
                                         $("<h4>", {"text": "Questions"})),
@@ -330,25 +406,6 @@
                 }
             });
 
-            //testin it son
-            $(".mc-add-question-input").keypress(function(e) {
-                console.log("Key pressed");
-                //on enter key pressed
-                if (e.keyCode == 13 && !($(this).hasClass('classTest')) ) {
-                       var panel = getPanel($(':focus'));
-                       var n = $('.text-box').length + 1;
-                        if( 5 < n ) {
-                            alert('Stop it!');
-                            return false;
-                        }
-                        var box_html = $('<p class="text-box"><label for="box' + n + '">Box <span class="box-number">' + n + '</span></label> <input type="text" name="boxes[]" value="" id="box' + n + '" /> <a href="#" class="remove-box">Remove</a></p>');
-                        box_html.hide();
-                        panel.find(".mc-rad-group").append(box_html);
-//                        $('.mc-rad-group').after(box_html);
-                        box_html.fadeIn('slow');
-                        return false;
-                }
-            });
 
             $('.my-form').on('click', '.remove-box', function(){
                 $(this).parent().css( 'background-color', '#FF6C6C' );
@@ -590,8 +647,7 @@
 			    questionDeletePanel = getPanel($(this));
 			    $('#delete-modal').foundation('reveal','open');
 			});
-
         </script>
+		}
 	</body>
 </html>
-}

@@ -2,68 +2,75 @@
 
 @main("Profile: " + student.firstName + " " + student.lastName, true) {
 
+	<div class="large-10 medium-12 small-12 columns light-grey-bg-pattern">
 
-<div class="row">
-    <div class="large-12 medium-12 small-12 columns"><br>
-        <h1>@student.firstName @student.lastName</h1>
-        <a href="@routes.UserController.showEditStudentPage(student.username)" class="button medium semiround">Edit Student</a><br><br><br>
-    </div>
-</div>
-<div class="row">
-    <div class="large-5 medium-5 small-5 columns">
-        <img src="../img/cookie_monster.jpg">
-    </div>
-    <br>
-    <div class="large-7 medium-7 small-7 columns panel text-bottom">
-        <table class="full-width">
-            <tr>
-                <th>First Name</th>
-                <td>@student.firstName</td>
-            </tr>
-            <tr>
-                <th>Last Name</th>
-                <td>@student.lastName</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>@student.email</td>
-            </tr>
-            <tr>
-                <th>Username</th>
-                <td>@student.username</td>
-            </tr>
-        </table>
-    </div>
-</div>
-<br>
-<div class="row" data-equalizer>
-    <div class="large-5 medium-5 small-5 columns">
-        <div class="panel" data-equalizer-watch>
-            <h3>Institutions</h3>
-            <ul class="no-bullet">
-                @for(institution <- Institution.getAllInstitutionsForStudent(student.id)) {
-                    <li>@institution.name</li>
-                }
-            </ul>
-        </div>
-    </div>
-    <div class="large-7 medium-7 small-7 columns">
-        <div class="panel" data-equalizer-watch>
-            <h3>Current Courses</h3>
-            <ul class="no-bullet">
-                @for(course <- Course.getAllCoursesForStudent(student.id)) {
-                    <li><a href="@routes.CourseController.showCoursePage(course.id)">@course.name</a> (@course.instructor.institution.name)</li>
-                }
-            </ul>
-        </div>
-    </div>
-</div>
-<script src="../js/vendor/jquery.js"></script>
-<script src="../js/foundation.min.js"></script>
-<script>
+		<div id="dashboard">
+
+			<div class="row">
+				<div class="large-12 medium-12 small-12 columns"><br>
+					<h1 class="left">@student.firstName @student.lastName</h1>
+					<a href="@routes.UserController.showEditStudentPage(student.username)" class="button radius">Edit Student</a><br><br><br>
+				</div>
+			</div>
+			<div class="row">
+				<div class="large-5 medium-5 small-5 columns">
+					<img src="@routes.Assets.versioned("images/users/cookiemonster.jpg")">
+				</div>
+				<br>
+				<div class="large-7 medium-7 small-7 columns custom-panel-body text-bottom">
+					<table class="full-width">
+						<tr>
+							<th>First Name</th>
+							<td>@student.firstName</td>
+						</tr>
+						<tr>
+							<th>Last Name</th>
+							<td>@student.lastName</td>
+						</tr>
+						<tr>
+							<th>Email</th>
+							<td>@student.email</td>
+						</tr>
+						<tr>
+							<th>Username</th>
+							<td>@student.username</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<br>
+			<div class="row" data-equalizer>
+				<div class="large-5 medium-5 small-5 columns">
+					<div class="custom-panel-heading">
+						<h3>Institutions</h3>
+					</div>
+					<div class="custom-panel-body" data-equalizer-watch>
+						<ul class="no-bullet">
+						@for(institution <- Institution.getAllInstitutionsForStudent(student.id)) {
+							<li>@institution.name</li>
+						}
+						</ul>
+					</div>
+				</div>
+				<div class="large-7 medium-7 small-7 columns">
+					<div class="custom-panel-heading">
+						<h3>Current Courses</h3>
+					</div>
+					<div class="custom-panel-body" data-equalizer-watch>
+						<ul class="no-bullet">
+						@for(course <- Course.getAllCoursesForStudent(student.id)) {
+							<li><a href="@routes.CourseController.showCoursePage(course.id)">@course.name</a> (@course.instructor.institution.name)</li>
+						}
+						</ul>
+					</div>
+				</div>
+			</div>
+			<script src="../js/vendor/jquery.js"></script>
+			<script src="../js/foundation.min.js"></script>
+			<script>
     $(document).foundation();
 </script>
-</body>
-</html>
+			</body>
+			</html>
 
 }

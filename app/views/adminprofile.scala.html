@@ -1,0 +1,150 @@
+
+<!doctype html>
+<html class="no-js" lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+
+		<link rel="stylesheet" href='@routes.Assets.versioned("css/foundation.css")' />
+		<link rel="stylesheet" href='@routes.Assets.versioned("foundation-datepicker.css")' />
+
+		<link rel="stylesheet" href='@routes.Assets.versioned("css/adminstyle.css")' />
+
+
+		<script type="text/javascript" src='@routes.Application.javascriptRoutes()'></script>
+
+
+		<script src='@routes.Assets.versioned("js/vendor/modernizr.js")'></script>
+		<script src='@routes.Assets.versioned("js/vendor/jquery.js")'></script>
+		<script src='@routes.Assets.versioned("js/foundation.min.js")'></script>
+		<script src='@routes.Assets.versioned("foundation-datepicker.js")'></script>
+		<script src='@routes.Assets.versioned("js/moment.min.js")'></script>
+
+	</head>
+	<body>
+		<div class="row full-width wrapper">
+			<div class="large-12 columns content-bg">
+				<div id="top-menu">
+					<div class="row">
+						<div class="large-2 medium-4 small-12 columns top-part-no-padding">
+							<div class="logo-bg">
+								<img src='@routes.Assets.versioned("images/logo_w_text.png")' alt="picture" style="width:90%;"/>
+							</div>
+						</div>
+						<section class="top-menu top-bar-section">
+							<ul class="right" style="list-style-type:none">
+								<li style="margin-right:10px"><a href="">Messages <span class="top-bar-unread">3</span></a></li>
+								<li class="has-dropdown" style="display:flex">
+									<img src='@routes.Assets.versioned("images/users/cookiemonster.jpg")' alt="picture" class="top-bar-picture" />
+									<a href="#" data-dropdown="profile-dropdown" data-options="is_hover:true;" style="padding-left:8px">John Cena</a>
+									<ul id="profile-dropdown" class="dropdown" style="margin-top:60px; list-style-type:none">
+										<li><a href="#">Edit Profile</a></li>
+										<li><a href="#">Logout</a></li>
+									</ul>
+								</li>
+
+							</ul>
+
+						</section>
+					</div>
+				</div>
+				<div class="row">
+					<div class="no-padding">
+						<div class="large-2 medium-12 small-12 columns">
+							<ul class="side-nav">
+								<li class="active"><a href="index.html"><i class="flaticon-dashboard1"></i>Dashboard</a></li>
+								<li><a href="">My Courses</a></li>
+								<li><a href="">My Students </a></li>
+								<li><a href="">Inbox <span class="side-nav-unread">3</span></a></li>
+								<li>ADMIN</li>
+								<li><a href="">All Courses</a></li>
+								<li><a href="">All Instructors</a></li>
+								<li><a href="">All Students</a></li>
+
+							</ul>
+						</div>
+					</div>
+					<div class="large-10 medium-12 small-12 columns light-grey-bg-pattern">
+						<div class="row">
+							<div class="large-10 columns">
+								<div class="page-name">
+									<h3 class="left">Profile <a href="#" class="button small radius right" style="margin:5px; padding:8px 16px 9px 16px">Edit</a>
+</h3>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+						</div>
+						<div id="profile">
+							<div class="row">
+								<div class="large-4 medium-6 columns">
+									<div class="profile-item white-bg border">
+										<h4>John Cena</h4>
+										<h5>Full Sail University</h5>
+										<hr />
+										<div class="row">
+											<img src='@routes.Assets.versioned("images/users/cookiemonster.jpg")' alt="picture" style="padding:5px"/>
+										</div>
+									</div>
+									
+									<div class="ongoing-task white-bg border">
+										<h4>Courses</h4>
+										dog<br>
+										dog<br>
+										dog
+									</div>
+								</div>
+								<div class="large-8 medium-6 columns">
+									<div class="profile-info">
+										<div class="white-bg">
+											<div class="custom-panel-heading">
+												<dl class="tabs" data-tab>
+													<dd class="active"><a href="#panel2-1">Profile</a></dd>
+													<dd><a href="#panel2-3">Password</a></dd>
+												</dl>
+											</div>
+											<div class="tabs-content">
+												<div class="content active" id="panel2-1">
+													<h4 class="coral">Enter your basic information</h4>
+													<hr />
+													<img src='@routes.Assets.versioned("images/users/cookiemonster.jpg")' class="profile-picture" />
+													<a href="#" data-dropdown="drop1" class="secondary button dropdown tiny radius">Upload photo</a><br>
+													<ul id="drop1" data-dropdown-content class="f-dropdown">
+														<li><a href="#">Upload photo</a></li>
+														<li><a href="#">Change photo</a></li>
+													</ul>
+													<br />
+													<input id="Text2" type="text" placeholder="First Name" value="John"/>
+													<input id="Text3" type="text" placeholder="Last Name" value="Cena"/>
+													<input id="Text7" type="text" placeholder="Email" />
+													<a href="#" class="button small radius coral-bg right">Save</a>
+												</div>
+												<div class="content" id="panel2-3">
+													<h4 class="coral">Change your password</h4>
+													<hr />
+													<input id="Password1" type="password" placeholder="Current Password" />
+													<input id="Password2" type="password" placeholder="New Password" />
+													<input id="Password3" type="password" placeholder="Confirm Password" />
+													<a href="#" class="button small radius coral-bg right">Save</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<script src="js/vendor/jquery.js"></script>
+		<script src="js/foundation.min.js"></script>
+		<script src="js/menu.js"></script>
+		<script>
+        $(document).foundation();
+    </script>
+	
+	
+	</body>
+</html>

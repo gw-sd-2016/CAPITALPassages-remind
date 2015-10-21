@@ -14,70 +14,74 @@
 	        </script>
 
 	<body>
-		<div class="row">
-			<div class="large-12 medium-12 small-12">
-				<h1>Create a New Course</h1>
-				<h4>@session.get("institutionName")</h4>
-				<br>
-			</div>
-		</div>
-		@if(form.hasGlobalErrors) {
-			<div class="alert alert-danger">
-			@form.globalError.message
+		<div class="large-10 medium-12 small-12 columns light-grey-bg-pattern">
 
-			</div>
-		}
-		<div class="row">
-			<div class="large-4 medium-4 small-4 columns">
-				<h5>Course Template</h5>
-				<button href="#" id="templateDropdown" data-dropdown="drop1" aria-controls="drop1" aria-expanded="false" class="button dropdown semiround">{Blank}</button><br>
-				<ul id="drop1" data-dropdown-content class="f-dropdown semiround" aria-hidden="true">
-				@for(course <- Course.getAllCoursesForInstructor(session.get("userId").toLong)) {
-					<li><a href="#">@course.name</a></li>
-				}
-				</ul>
-			</div>
-			<form action="@routes.CourseController.createCourse" method="post" enctype="multipart/form-data">
-				<input type="hidden" name="start" id="start">
-				<input type="hidden" name="end" id="end">
-				<input type="hidden" name="instructorId" id="instructorId" value="@session.get("userId")">
-
-				<div class="large-4 medium-4 small-4 small-centered columns">
-					@if(User.byId(session.get("userId").toLong).`type` == User.Role.ADMIN) {
-						<h5>Course Instructor</h5>
-						<button href="#" id="instructorDropdown" data-dropdown="drop2" aria-controls="drop2" aria-expanded="false" class="button dropdown semiround full-width">Select a Instructor</button><br>
-						<ul id="drop2" data-dropdown-content class="f-dropdown semiround" aria-hidden="true">
-						@for(instructor <- User.getAllInstructorsForInstitution(session.get("institutionId").toLong)) {
-							<li id="@instructor.id"><a>@instructor.firstName @instructor.lastName</a></li>
-						}
-						</ul>
-					}
-					<h5>Course Name</h5>
-					<input type="text" name="name" value="@form("name").value">
-					<h5>Description</h5>
-					<textarea name="description" value="@form("description").value"></textarea>
-
-					<table class="table">
-						<thead>
-							<tr>
-								<th>Start date:
-									<input type="text" class="span2" value="" id="dpd1">
-								</th>
-								<th>End date:
-									<input type="text" class="span2" value="" id="dpd2">
-								</th>
-							</tr>
-						</thead>
-					</table>
-
-					<div class="text-center">
-						<button type="submit" class="button success semiround">Submit</button>
+			<div id="dashboard">
+				<div class="row">
+					<div class="large-12 medium-12 small-12">
+						<h1>Create a New Course</h1>
+						<h4>@session.get("institutionName")</h4>
+						<br>
 					</div>
 				</div>
-			</form>
+				@if(form.hasGlobalErrors) {
+					<div class="alert alert-danger">
+					@form.globalError.message
+
+					</div>
+				}
+				<div class="row">
+					<div class="custom-panel-body">
+						<div class="large-4 medium-4 small-4 columns">
+							<h5>Course Template</h5>
+							<button href="#" id="templateDropdown" data-dropdown="drop1" aria-controls="drop1" aria-expanded="false" class="button dropdown semiround">{Blank}</button><br>
+							<ul id="drop1" data-dropdown-content class="f-dropdown semiround" aria-hidden="true">
+							@for(course <- Course.getAllCoursesForInstructor(session.get("userId").toLong)) {
+								<li><a href="#">@course.name</a></li>
+							}
+							</ul>
+						</div>
+						<form action="@routes.CourseController.createCourse" method="post" enctype="multipart/form-data">
+							<input type="hidden" name="start" id="start">
+							<input type="hidden" name="end" id="end">
+							<input type="hidden" name="instructorId" id="instructorId" value="@session.get("userId")">
+
+							<div class="large-4 medium-4 small-4 small-centered columns">
+								@if(User.byId(session.get("userId").toLong).`type` == User.Role.ADMIN) {
+									<h5>Course Instructor</h5>
+									<button href="#" id="instructorDropdown" data-dropdown="drop2" aria-controls="drop2" aria-expanded="false" class="button dropdown semiround full-width">Select a Instructor</button><br>
+									<ul id="drop2" data-dropdown-content class="f-dropdown semiround" aria-hidden="true">
+									@for(instructor <- User.getAllInstructorsForInstitution(session.get("institutionId").toLong)) {
+										<li id="@instructor.id"><a>@instructor.firstName @instructor.lastName</a></li>
+									}
+									</ul>
+								}
+								<h5>Course Name</h5>
+								<input type="text" name="name" value="@form("name").value">
+								<h5>Description</h5>
+								<textarea name="description" value="@form("description").value"></textarea>
+
+								<table class="table">
+									<thead>
+										<tr>
+											<th>Start date:
+												<input type="text" class="span2" value="" id="dpd1">
+											</th>
+											<th>End date:
+												<input type="text" class="span2" value="" id="dpd2">
+											</th>
+										</tr>
+									</thead>
+								</table>
+
+								<div class="text-center">
+									<button type="submit" class="button success semiround">Submit</button>
+								</div>
+							</div>
+						</form>
 
 
-		</div>
+					</div>
 	</body>
 
 		<script>

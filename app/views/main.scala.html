@@ -2,17 +2,18 @@
 
 <!DOCTYPE html>
 
+<!doctype html>
 <html class="no-js" lang="en">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta name="layout" content="main"/>
-		<title>@title</title>
+		<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+
 		<link rel="stylesheet" href='@routes.Assets.versioned("css/foundation.css")' />
 		<link rel="stylesheet" href='@routes.Assets.versioned("foundation-datepicker.css")' />
-		<link rel="stylesheet" href='@routes.Assets.versioned("css/remind-style.css")' />
-		<link rel="stylesheet" href='@routes.Assets.versioned("css/remind-style.css")'>
-		<link rel="stylesheet" href='@routes.Assets.versioned("css/remind-style.css")' />
+
+		<link rel="stylesheet" href='@routes.Assets.versioned("css/adminstyle.css")' />
+
 
 		<script type="text/javascript" src='@routes.Application.javascriptRoutes()'></script>
 
@@ -23,32 +24,101 @@
 		<script src='@routes.Assets.versioned("foundation-datepicker.js")'></script>
 		<script src='@routes.Assets.versioned("js/moment.min.js")'></script>
 
-		
+		<link rel="stylesheet" href='@routes.Assets.versioned("font-awesome-4.4.0/css/font-awesome.min.css")'>
 
 		<link rel='stylesheet' href='@routes.Assets.versioned("fullcalendar-2.3.2/fullcalendar.css")' />
 		<script src='@routes.Assets.versioned("fullcalendar-2.3.2/fullcalendar.js")'></script>
-<body>
-	
-	@if(shouldShowLoggedInContent) {
-		<nav class="top-bar" data-topbar role="navigation">
-			<ul class="title-area">
-				<li class="name">
-					<h1><a href="#">Remind</a></h1>
-				</li>
-			</ul>
-			<section class="top-bar-section">
-				<ul class="right">
-					@if(User.byId(session.get("userId").toLong).`type` == User.Role.ADMIN) {
-						<li><a href="@routes.CourseController.showAllCoursesPage()">Manage Courses</a></li>
-						<li><a href="@routes.UserController.showAllInstructorsPage()">Manage Instructors</a></li>
-						<li><a href="@routes.UserController.showAllStudentsPage()">Manage Students</a></li>
-					}
-					<li><a href="@routes.CourseController.showMyCoursesPage()">My Courses</a></li>
-					<li><a href="@routes.UserController.showInstructorProfilePage(User.byId(session.get("userId").toLong).username)">@User.byId(session.get("userId").toLong).username</a></li>
-				</ul>
-			</section>
-		</nav>
+
+	</head>
+	<body>
+
+		@if(shouldShowLoggedInContent) {
+			<div class="row full-width wrapper">
+				<div class="large-12 columns content-bg">
+					<div id="top-menu">
+						<div class="row">
+							<div class="large-2 medium-4 small-12 columns top-part-no-padding">
+								<div class="logo-bg">
+									<img src='@routes.Assets.versioned("images/logo_w_text.png")' alt="picture" style="width:90%;"/>
+								</div>
+							</div>
+							<section class="top-menu top-bar-section">
+								<ul class="right" style="list-style-type:none">
+									<li style="margin-right:10px"><a href="">Messages <span class="top-bar-unread">3</span></a></li>
+									<li class="has-dropdown" style="display:flex">
+										<img src='@routes.Assets.versioned("images/users/cookiemonster.jpg")' alt="picture" class="top-bar-picture" />
+										<a href="#" data-dropdown="profile-dropdown" data-options="is_hover:true;" style="padding-left:8px">John Cena</a>
+										<ul id="profile-dropdown" class="dropdown" style="margin-top:60px; list-style-type:none">
+											<li><a href="#">Edit Profile</a></li>
+											<li><a href="#">Logout</a></li>
+										</ul>
+									</li>
+
+								</ul>
+
+							</section>
+						</div>
+					</div>
+					<div class="row">
+						<div class="no-padding">
+							<div class="large-2 medium-12 small-12 columns">
+								<ul class="side-nav">
+									<li class="active"><a href="@routes.Application.showIndexPage()">
+										<div class="icon"><i class="fa fa-dashboard nav"></i></div>
+										<div class="title">Dashboard</div>
+									</a></li>
+									<li><a href="@routes.CourseController.showMyCoursesPage()">
+										<div class="icon"><i class="fa fa-mortar-board nav"></i></div>
+										<div class="title">My Courses</div>
+									</a></li>
+									<li><a href="#">
+										<div class="icon"><i class="fa fa-envelope nav"></i></div>
+										<div class="title">Inbox <span class="side-nav-unread">3</span></div>
+									</a></li>
+									<li>
+										<ul>
+											<li>
+												<dl class="accordion" data-accordion="myAccordionGroup">
+													<dd>
+														<a href="#panel1c">
+															<div class="icon"><i class="fa fa-cogs nav"></i></div>
+															<div class="title"><i>ADMIN</i></div>
+														</a>
+														<div id="panel1c" class="content">
+															<ul>
+																<li><a href="@routes.CourseController.showAllCoursesPage()">
+																	All Courses
+																</a></li>
+																<li><a href="@routes.UserController.showAllInstructorsPage()">
+																	All Instructors
+																</a></li>
+																<li><a href="@routes.UserController.showAllStudentsPage()">
+																	All Students
+																</a></li>
+															</ul>
+														</div>
+													</dd>
+												</dl>
+											</li>
+										</ul>
+									</li>
+
+								</ul>
+							</div>
+						</div>
+
+						<script src='@routes.Assets.versioned("js/admin.js")'></script>
+
+						<script>
+            $(document).foundation();
+        </script>
 	}
+
 	@content
-</body>
+
+	</div>
+	</div>
+	</div>
+	</div>
+	</body>
 </html>

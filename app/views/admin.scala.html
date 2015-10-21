@@ -1,0 +1,189 @@
+
+<!doctype html>
+<html class="no-js" lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+
+		<link rel="stylesheet" href='@routes.Assets.versioned("css/foundation.css")' />
+		<link rel="stylesheet" href='@routes.Assets.versioned("foundation-datepicker.css")' />
+
+		<link rel="stylesheet" href='@routes.Assets.versioned("css/adminstyle.css")' />
+
+
+		<script type="text/javascript" src='@routes.Application.javascriptRoutes()'></script>
+
+
+		<script src='@routes.Assets.versioned("js/vendor/modernizr.js")'></script>
+		<script src='@routes.Assets.versioned("js/vendor/jquery.js")'></script>
+		<script src='@routes.Assets.versioned("js/foundation.min.js")'></script>
+		<script src='@routes.Assets.versioned("foundation-datepicker.js")'></script>
+		<script src='@routes.Assets.versioned("js/moment.min.js")'></script>
+
+	</head>
+	<body>
+		<div class="row full-width wrapper">
+			<div class="large-12 columns content-bg">
+				<div id="top-menu">
+					<div class="row">
+						<div class="large-2 medium-4 small-12 columns top-part-no-padding">
+							<div class="logo-bg">
+								<img src='@routes.Assets.versioned("images/logo_w_text.png")' alt="picture" style="width:90%;"/>
+							</div>
+						</div>
+						<section class="top-menu top-bar-section">
+							<ul class="right" style="list-style-type:none">
+								<li style="margin-right:10px"><a href="">Messages <span class="top-bar-unread">3</span></a></li>
+								<li class="has-dropdown" style="display:flex">
+									<img src='@routes.Assets.versioned("images/users/cookiemonster.jpg")' alt="picture" class="top-bar-picture" />
+									<a href="#" data-dropdown="profile-dropdown" data-options="is_hover:true;" style="padding-left:8px">John Cena</a>
+									<ul id="profile-dropdown" class="dropdown" style="margin-top:60px; list-style-type:none">
+										<li><a href="#">Edit Profile</a></li>
+										<li><a href="#">Logout</a></li>
+									</ul>
+								</li>
+
+							</ul>
+
+						</section>
+					</div>
+				</div>
+				<div class="row">
+					<div class="no-padding">
+						<div class="large-2 medium-12 small-12 columns">
+							<ul class="side-nav">
+								<li class="active"><a href="index.html"><i class="flaticon-dashboard1"></i>Dashboard</a></li>
+								<li><a href="">My Courses</a></li>
+								<li><a href="">My Students </a></li>
+								<li><a href="">Inbox <span class="side-nav-unread">3</span></a></li>
+								<li>ADMIN</li>
+								<li><a href="">All Courses</a></li>
+								<li><a href="">All Instructors</a></li>
+								<li><a href="">All Students</a></li>
+
+							</ul>
+						</div>
+					</div>
+					<div class="large-10 medium-12 small-12 columns light-grey-bg-pattern">
+						<div class="row">
+							<div class="large-10 columns">
+								<div class="page-name">
+									<h3>Dashboard</h3>
+								</div>
+							</div>
+						</div>
+						<div id="dashboard">
+							<div class="row">
+								<div class="large-3 medium-6 small-12 columns">
+									<div class="stats border">
+										<div class="left">
+                                        My Courses
+											<h3>$97334001</h3>
+										</div>
+										<i class="fi-price-tag right sales"></i>
+										<div class="clearfix"></div>
+									</div>
+								</div>
+								<div class="large-3 medium-6 small-12 columns">
+									<div class="stats border">
+										<div class="left">
+                                        Orders
+											<h3>400</h3>
+										</div>
+										<i class="fi-shopping-cart right orders"></i>
+										<div class="clearfix"></div>
+									</div>
+								</div>
+								<div class="large-3 medium-6 small-12 columns">
+									<div class="stats border">
+										<div class="left">
+                                        Profit
+											<h3>$600</h3>
+										</div>
+										<i class="fi-dollar right profit"></i>
+										<div class="clearfix"></div>
+									</div>
+								</div>
+								<div class="large-3 medium-6 small-12 columns">
+									<div class="stats border">
+										<div class="left">
+                                        Users
+											<h3>100</h3>
+										</div>
+										<i class="fi-torso right user"></i>
+										<div class="clearfix"></div>
+									</div>
+								</div>
+							</div>
+							<br />
+							<div class="row">
+								<div class="large-8 columns">
+									<div class="custom-panel">
+										<div class="custom-panel-heading">
+											<h4>Charts</h4>
+										</div>
+										<div class="custom-panel-body">
+											<div id="morris-area-chart"></div>
+										</div>
+									</div>
+								</div>
+								<div class="large-4 columns">
+									<div class="custom-panel">
+										<div class="custom-panel-heading">
+											<h4>Charts</h4>
+										</div>
+										<div class="custom-panel-body">
+											<div id="morris-donut-chart"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<br />
+							<div class="row">
+								<div class="large-6 columns">
+									<div class="custom-panel">
+										<div class="custom-panel-heading">
+											<h4>Quick Message</h4>
+										</div>
+										<div class="custom-panel-body">
+											<label>Address</label>
+											<input id="Text2" type="text" />
+											<label>Subject</label>
+											<input id="Text3" type="text" />
+											<label>Message</label>
+											<textarea></textarea>
+											<a href="#" class="button tiny radius coral-bg right">Send</a>
+											<div class="clearfix"></div>
+										</div>
+									</div>
+								</div>
+								<div class="large-6 columns">
+									<div class="custom-panel">
+										<div class="custom-panel-heading">
+											<h4>To Do</h4>
+										</div>
+										<div class="custom-panel-body">
+											<input id="new-todo" type="text" placeholder="What needs to be done?">
+											<ul id="todo-list">
+
+                                        </ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src='@routes.Assets.versioned("js/admin.js")'></script>
+		<script src='@routes.Assets.versioned("js/vendor/jquery.js")'></script>
+
+		<script>
+            $(document).foundation();
+        </script>
+
+	</body>
+</html>
