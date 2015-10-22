@@ -195,13 +195,22 @@ public class User extends Model {
 	
 	//-----------Single-------------//
 	
-	//Get User by ID
+	//Get User by ID (Long)
 	public static User byId(Long id) {
 		return find.where()
 					.ne("retired", true)
 					.eq("id", id)
 				.findUnique();
 	}
+
+    //Get User by ID (String)
+    public static User byId(String idString) {
+        Long id = Long.parseLong(idString);
+        return find.where()
+                .ne("retired", true)
+                .eq("id", id)
+                .findUnique();
+    }
 
 	//Get User by email address
 	public static User byEmail(String email) {
