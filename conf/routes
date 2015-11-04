@@ -18,6 +18,7 @@ POST        /createCourse                    controllers.CourseController.create
 GET         /allCourses                      @controllers.CourseController.showAllCoursesPage
 GET         /myCourses                       @controllers.CourseController.showMyCoursesPage
 GET         /course/:courseId                controllers.CourseController.showCoursePage(courseId: Long)
+POST 		/deleteCourse/:courseId			 controllers.CourseController.deleteCourse(courseId: Long)
 GET         /login                           @controllers.Application.showLoginPage()
 POST        /login                           controllers.Application.login
 
@@ -37,7 +38,6 @@ GET         /createQuestion                  controllers.QuestionController.show
 
 GET         /test                            @controllers.Application.showAdminTestPage()
 GET         /testprofile                     @controllers.Application.showAdminProfileTestPage()
-
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                    controllers.Assets.versioned(path="/public", file: Asset)

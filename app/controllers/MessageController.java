@@ -137,6 +137,8 @@ public class MessageController extends Controller {
 			return ok("false");
 		}
 
+		System.out.println("announcement id " + messageId);
+
 		Message.delete(messageId);
 
 		return ok("true");

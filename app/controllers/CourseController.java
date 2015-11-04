@@ -134,4 +134,16 @@ public class CourseController extends Controller {
 		}
 		return redirect(routes.CourseController.showCreateCoursePage());
 	}
+
+	public static Result deleteCourse(long courseId) {
+		Course course = Course.byId(courseId);
+		if (course == null) {
+			return ok("false");
+		}
+		
+		//System.out.println("trying to delete " + courseId);
+
+		course.delete(courseId);
+      	  	return ok("true");
+	}
 }

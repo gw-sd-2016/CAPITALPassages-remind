@@ -95,7 +95,8 @@ public class Application extends Controller {
 				Routes.javascriptRouter("jsRoutes",
 						routes.javascript.MessageController.delete(),
 						routes.javascript.MessageController.modifyAnnouncement(),
-						routes.javascript.MessageController.createAnnouncement()
+						routes.javascript.MessageController.createAnnouncement(),
+						routes.javascript.CourseController.deleteCourse()
 				)
 		);
 	}

@@ -23,6 +23,7 @@
 							<table width="100%">
 									<tr>
 										<th>Course Name</th>
+										<th>ID</th> <!--TODO: remove-->
 										<th width="100">Students</th>
 										<th width="150">Date</th>
 										<th>Actions</th>
@@ -31,11 +32,37 @@
 								@for(course <- Course.getAllCoursesForInstructor(instructor.id)) {
 									<tr>
 										<td><a href="@routes.CourseController.showCoursePage(course.id)">@course.name</a></td>
-										<td>@User.getAllStudentsForCourse(course.id).size()</td>
+										<td>@course.id</td> <!--TODO: remove-->
+										<td>@User.getAllStudentsForCourse(course.id).size()</td> 
 										<td>@course.startDate</td>
 										<td><a href="#" class="button radius">Edit</a>
-											<a href="#" class="button radius alert">Delete</a>
+											<a role="button" data-reveal-id="deleteCourseModal-@course.id" class="button radius alert">Delete</a>
 										</td>
+
+										<div id="deleteCourseModal-@course.id" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+												<h2 id="modalTitle">Are you sure you want to delete this course?</h2>
+												<p class="lead">This cannot be undone.</p>
+												<p>You are trying to delete Course @course.id</p>
+												<a class="close-reveal-modal" aria-label="Close">&#215;</a>
+
+												<button class="button radius">Cancel</button>
+												<button id="delete-@course.id" class="button radius alert deleteBtn">Delete</button>
+											</div>
+
+											<script>
+												$(".deleteBtn").on("click", function() {
+													var id = $(this).attr('id').split("-")[1];
+
+													console.log("trying to delete course " + id);
+													jsRoutes.controllers.CourseController.deleteCourse(id).ajax({
+													    success : function(data) {
+													        window.location.reload();
+													    },
+													    error : function(err) {
+													    }
+													});
+												});
+											</script>
 									</tr>
 								}
 
@@ -44,9 +71,39 @@
 						</div>
 					</div>
 				</div>
+
 				<script src="js/vendor/jquery.js"></script>
 				<script src="js/foundation.min.js"></script>
 				<script>
-		$(document).foundation();
-	</script>
+					$(document).foundation();
+				</script>
+
+				<script>
+        			$('a#deleteCourse').click(function() {
+        				console.log('ok');
+
+        				var button = $(this);
+        				button.toggleClass('active');
+
+        				var courseData = $(this).attr('name').split(":|:");
+        				var courseId = courseData[0];
+        				var courseName = courseData[1];
+
+            			bootbox.confirm("Are you sure you want to delete course '" + courseName + "'? This cannot be undone.", function(result) {
+            				if (result) {
+		            			button.prop("disabled", true);
+		            			jsRoutes.controllers.CourseController.delete(courseId).ajax({
+					    			success : function(data) {
+					    				window.location.reload();
+					    			},
+					    			error : function(err) {
+					    				console.log("welp");	
+					    			}
+								});
+		        			} else {
+		        				button.toggleClass('active');
+		        			}
+            			});
+        			});
+    			</script>
 }
