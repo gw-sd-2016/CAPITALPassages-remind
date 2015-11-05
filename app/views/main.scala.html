@@ -42,12 +42,12 @@
 									<img src='@routes.Assets.versioned("images/logo_w_text.png")' alt="picture" style="width:90%;"/>
 								</div>
 							</div>
-							<section class="top-menu top-bar-section">
+							<section class="top-menu top-bar-section" >
 								<ul class="right" style="list-style-type:none">
 									<li style="margin-right:10px"><a href="">Messages <span class="top-bar-unread">3</span></a></li>
 									<li class="has-dropdown" style="display:flex">
 										<img src='@routes.Assets.versioned("images/users/cookiemonster.jpg")' alt="picture" class="top-bar-picture" />
-										<a href="#" data-dropdown="profile-dropdown" data-options="is_hover:true;" style="padding-left:8px">@User.byId(session.get("userId")).firstName @User.byId(session.get("userId")).lastName</a>
+										<a href="#"  style="padding-left:8px">@User.byId(session.get("userId")).firstName @User.byId(session.get("userId")).lastName</a>
 										<ul id="profile-dropdown" class="dropdown" style="margin-top:60px; list-style-type:none">
 											<li><a href="#">Edit Profile</a></li>
 											<li><a href="#">Logout</a></li>
