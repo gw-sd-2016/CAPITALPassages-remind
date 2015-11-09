@@ -39,8 +39,35 @@
 										<td>@User.getAllStudentsForCourse(course.id).size()</td>
 										<td>@course.startDate</td>
 										<td><a href="#" class="button semiround">Edit</a>
-											<a href="#" class="button semiround alert">Delete</a>
+											<a role="button" data-reveal-id="deleteAllCourseModal-@course.id" class="button semiround alert">Delete</a>
 										</td>
+
+										<div id="deleteAllCourseModal-@course.id" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+												<h2 id="modalTitle">Are you sure you want to delete course "@course.name"?</h2>
+												<p class="lead">This cannot be undone.</p>
+												<a class="close-reveal-modal" aria-label="Close">&#215;</a>
+
+												<button class="button radius close-delete-all-course-modal-@course.id">Cancel</button>
+												<button id="deleteall-@course.id" class="button radius alert deleteBtn">Delete</button>
+											</div>
+
+											<script>
+												$(".deleteBtn").on("click", function() {
+													var id = $(this).attr('id').split("-")[1];
+
+													jsRoutes.controllers.CourseController.deleteCourse(id).ajax({
+													    success : function(data) {
+													        window.location.reload();
+													    },
+													    error : function(err) {
+													    }
+													});
+												});
+
+												$(".close-delete-all-course-modal-@course.id").on("click", function() {
+													$("#deleteAllCourseModal-@course.id").foundation("reveal", "close");
+												});
+											</script>
 									</tr>
 								}
 								</tbody>
