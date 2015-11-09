@@ -290,6 +290,11 @@ public class UserController extends Controller {
 
 		return ok(editStudent.render(form, User.byUsername(username)));
 	}
+	public static Result logout() {
+		session().clear();
+		System.out.println("TEST");
+		return redirect(routes.Application.showLoginPage());
+	}
 
 }
 

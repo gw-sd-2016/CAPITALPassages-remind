@@ -33,11 +33,11 @@ GET         /editInstructor/:username        controllers.UserController.showEdit
 POST        /editInstructor/:username        controllers.UserController.modifyInstructor(username: String)
 GET         /editStudent/:username           controllers.UserController.showEditStudentPage(username: String)
 POST        /editStudent/:username           controllers.UserController.modifyStudent(username: String)
+GET			/logout							 controllers.UserController.logout()
 
 GET         /createQuestion                  controllers.QuestionController.showCreateQuestionPage()
 
 GET         /test                            @controllers.Application.showAdminTestPage()
 GET         /testprofile                     @controllers.Application.showAdminProfileTestPage()
-
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                    controllers.Assets.versioned(path="/public", file: Asset)
