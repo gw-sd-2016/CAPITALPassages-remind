@@ -65,6 +65,8 @@ public class Application extends Controller {
 			session("userFirstName", user.firstName);
 			session("institutionId", user.institution.id.toString());
 			session("institutionName", user.institution.name);
+			session("userType", user.type.toString());
+			System.out.println(user.type.toString());
 			return redirect((returnUrl.equals("none")) ? "/" : returnUrl);
 		}
 	}

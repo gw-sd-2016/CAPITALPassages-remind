@@ -51,7 +51,7 @@
 
 									<ui class = "has-dropdown ">
 										<a href="#" data-dropdown="drop1" aria-controls="drop1"  style="padding-left:8px">@User.byId(session.get("userId")).firstName @User.byId(session.get("userId")).lastName</a>
-										<ul class="f-dropdown" id = "drop1" >
+										<ul class="f-dropdown" id = "drop1"  d>
 											<li style = "width:100%"><a href="#">Edit Profile</a></li>
 											<li style="width:100%"><a href="@routes.UserController.logout()">Logout</a></li>
 										</ul>
@@ -78,6 +78,7 @@
 										<div class="icon"><i class="fa fa-envelope nav"></i></div>
 										<div class="title">Inbox <span class="side-nav-unread">3</span></div>
 									</a></li>
+									@if(session.get("userType") == "ADMIN") {
 									<li>
 										<ul>
 											<li>
@@ -105,6 +106,7 @@
 											</li>
 										</ul>
 									</li>
+									}
 
 								</ul>
 							</div>
