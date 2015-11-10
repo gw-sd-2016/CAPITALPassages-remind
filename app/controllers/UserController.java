@@ -51,8 +51,7 @@ public class UserController extends Controller {
 			instructor.username = instructorForm.username;
 			instructor.email = instructorForm.email;
 			instructor.password = instructorForm.password;
-			
-			User.create(instructor);
+			instructor.save();
 		}
 		
 		flash("success", "Instructor's profile has been modified.");
