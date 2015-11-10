@@ -52,7 +52,7 @@
 									<ui class = "has-dropdown ">
 										<a href="#" data-dropdown="drop1" aria-controls="drop1"  style="padding-left:8px">@User.byId(session.get("userId")).firstName @User.byId(session.get("userId")).lastName</a>
 										<ul class="f-dropdown" id = "drop1"  d>
-											<li style = "width:100%"><a href="#">Edit Profile</a></li>
+											<li style = "width:100%"><a href="@routes.UserController.showEditInstructorPage(User.byId(session.get("userId")).username)">Edit Profile</a></li>
 											<li style="width:100%"><a href="@routes.UserController.logout()">Logout</a></li>
 										</ul>
 									</ui>
