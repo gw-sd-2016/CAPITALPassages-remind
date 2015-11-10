@@ -132,7 +132,7 @@ public class CourseController extends Controller {
 			Course newCourse = new Course(newCourseForm.get());
 			Course.create(newCourse);
 		}
-		return redirect(routes.CourseController.showCreateCoursePage());
+		return redirect(routes.CourseController.showMyCoursesPage());
 	}
 
 	public static Result deleteCourse(long courseId) {
