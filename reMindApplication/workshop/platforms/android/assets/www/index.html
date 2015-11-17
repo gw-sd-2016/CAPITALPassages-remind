@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="UTF-8"> 
+    <script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+    <!--CSS-->
+    <style>
+    
+    </style>
+</head>
+<!--HTML body-->
+<body ng-app="myApp" ng-controller="myCtrl">
+  <div id="blech">
+    ID: {{res.id}}
+    <br>Retired: {{res.retired}}
+    <br>Created Time: {{res.createdTime}}
+    <br>Updated Time: {{res.updatedTime}}
+    <br>Name: {{res.name}}
+  </div>
+
+  <!--Preview JSON object to be sent to server-->
+  <div id="objectCreator">
+    <button ng-click="submitRecord()">Create Object</button>
+    <p>Object is: {{jsonObject}}
+  </div>
+
+  <!--debug the server by printing things whenever-->
+  <div id="printButton">
+    <button ng-click="makeServerPrintLine()">newline</button>
+  </div>
+
+  <div id="questionsButton">
+    <button ng-click="getAllQuestionsForModule(myModuleId)">Get Questions</button>
+  </div>
+
+  <div id="debugger">
+    This is the debugger!
+  </div>
+
+  <script>
+    var app = angular.module('myApp', []);
+    app.controller('myCtrl', function($scope, $http) {
+      $http.get('http://10.0.2.2:9000/getData')
+        .then(function(response) {
+          // using .then like this gives response a .status and a .data field, so our resulting JSON has its lessonrecords stored in response.data.data (not again)
+          $scope.res = angular.fromJson(response).data;
+        })
+        .catch(function(response) {
+          console.error('Failed to receive getLessons data', response.status, response.data);
+        })
+        .finally(function() {
+          console.log('Finished getting data from getLessons');
+        });
+
+        $scope.myModuleId = 2;
+
+      // http://10.0.2.2:9000/mobile/getQuestions/(moduleid)
+
+      $scope.makeServerPrintLine = function() {
+        $http.post('http://10.0.2.2:9000/printLn')
+        .then(function(response) {
+          console.log('We did it, kids');
+        })
+        .catch(function(response) {
+          console.error('Failed to receive getLessons data', response.status, response.data);
+        })
+        .finally(function() {
+          console.log('Finished getting data from getLessons');
+        });
+      };
+
+      $scope.getAllQuestionsForModule = function(moduleId) {
+        $http.get('http://10.0.2.2:9000/mobile/getQuestions/' + $scope.myModuleId)
+        .then(function(response) {
+            $scope.data = angular.fromJson(response).data;
+        })
+        .catch(function(response) {
+            console.error('Failed to receive question data.');
+            document.getElementById("debugger").innerHTML = 'http://10.0.2.2:9000/mobile/getQuestions/' + $scope.moduleId;
+        })
+        .finally(function() {
+            console.log('Finished trying to get question data.')
+        });
+      };
+
+    });
+  </script>
+</body>
+</html>
