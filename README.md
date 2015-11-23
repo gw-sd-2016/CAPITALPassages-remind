@@ -1,3 +1,6 @@
+#NOTE for Senior Design
+Our progress can be tracked on our bitbucket repository, this repo is not necessarily up to date.
+
 # Dependencies
 
 Before attempting to run the activator, you will need:
