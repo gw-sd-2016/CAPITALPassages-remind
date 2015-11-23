@@ -1,3 +1,6 @@
+#NOTE for Senior Design
+Our progress can be tracked on our github repository as discussed with Dr. Simha.  This github repo is not necessarily up to date.
+
 # Dependencies
 
 Before attempting to run the activator, you will need:
